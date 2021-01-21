@@ -1,16 +1,126 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	}
+  //注册uni-ui组件为全局模块
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  //引入导航栏
+  "topWindow": {
+    "path": "windows/top-windows",
+    "style": {
+      "height": "60px"
+    }
+  },
+  "pages": [
+    //		nvue
+    {
+      //首页
+      "path": "pages/tabBar/index/index"
+    },
+    {
+      // 测试页1
+      "path": "pages/tabBar/test1/index"
+    },
+    {
+      // 测试页2
+      "path": "pages/tabBar/test2/index"
+    },
+    {
+      // 测试页3
+      "path": "pages/tabBar/test3/index"
+    },
+    {
+      "path": "pages/tabBar/activity/activity"
+    },
+    {
+      "path": "pages/tabBar/personal/index"
+    },
+    //		vue
+    {
+      //测试页1
+      "path": "pages/test1/index"
+    },
+    {
+      //测试页2
+      "path": "pages/test2/index"
+    },
+    {
+      // 测试页3
+      "path": "pages/test3/index"
+    },
+    {
+      //首页
+      "path": "pages/index/index"
+    },
+    {
+      "path": "pages/activity/activity"
+    },
+    {
+      "path": "pages/personal/index"
+    },
+    // 其他页面
+    {
+      "path": "pages/login/login"
+    },
+    {
+      "path": "pages/clubDetail/index",
+      "style": {
+        "navigationBarTitleText": "社团详情",
+        "app-plus": {
+          "width": "750rpx"
+        },
+        "h5": {
+          "width": "100%"
+        }
+      }
+    }
+  ],
+  "globalStyle": {
+    //	"navigationStyle":"custom"
+    "pageOrientation": "portrait",
+    "navigationBarTitleText": "社团",
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#007AFF",
+    "backgroundColor": "#F8F8F8",
+    "backgroundColorTop": "#F4F5F6",
+    "backgroundColorBottom": "#F4F5F6",
+    //		"mp-360": {
+    //			"navigationStyle": "custom"
+    //		},
+    "h5": {
+      // "maxWidth": 1190,
+      "navigationStyle": "custom",
+      "navigationBarTextStyle": "black",
+      "navigationBarBackgroundColor": "#F1F1F1"
+    }
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#007AFF",
+    "borderStyle": "black",
+    "backgroundColor": "#F8F8F8",
+    "list": [
+      {
+        "pagePath": "pages/tabBar/index/index",
+        "iconPath": "static/component.png",
+        "selectedIconPath": "static/componentHL.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/tabBar/activity/activity",
+        "iconPath": "static/extui.png",
+        "selectedIconPath": "static/extuiHL.png",
+        "text": "活动"
+      },
+      {
+        "pagePath": "pages/tabBar/personal/index",
+        "iconPath": "static/template.png",
+        "selectedIconPath": "static/templateHL.png",
+        "text": "个人中心"
+      }
+    ]
+  }
 }
+//	首页，社团，活动，报名社团，申请社团，登录，注册
