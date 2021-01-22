@@ -12,18 +12,26 @@
       </view>
       <view class="uni-list-cell">
         <view class="uni-list-cell-left">
-          社团图片
-        </view>
-        <view class="uni-list-cell-db">
-          <image :src="list.appImage"></image>
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
           社长
         </view>
         <view class="uni-list-cell-db">
           {{ list.users.realname}}
+        </view>
+      </view>
+      <view class="uni-list-cell">
+        <view class="uni-list-cell-left">
+          指导教师
+        </view>
+        <view class="uni-list-cell-db">
+          {{ list.teacher}}
+        </view>
+      </view>
+      <view class="uni-list-cell">
+        <view class="uni-list-cell-left">
+          社团图片
+        </view>
+        <view class="uni-list-cell-db">
+          <image class="myimg" :src="list.appImage"></image>
         </view>
       </view>
       <view class="uni-list-cell">
@@ -71,12 +79,14 @@ export default {
     //     this.getDetail()
     //   }
     // })
-    uni.getStorage({
-      key: 'cid',
-      success: function (res) {
-        console.log(res.data);
-      }
-    });
+    // #ifdef H5
+    this.cid = uni.getStorageSync('cid')
+    // #endif
+    // #ifdef MP-WEIXIN
+    this.cid = uni.getStorageSync('cid').detail.index
+    // #endif
+    console.log(this.cid)
+    this.getDetail()
   },
   methods: {
     // onLoad(option){
@@ -96,23 +106,23 @@ export default {
       //   this.list = res.data
       //   this.list.appImage='http://localhost:3000/' + res.data.appImage.replace(/\\/g, '/')
       // })
-      uni.request({
-        url: 'http://localhost:3000/club/userclubinfo',
-        method: 'post',
-        data: {
-          cid: this.cid
-        },
-        success: (res) => {
-          // console.log(res.data.data);
-          this.list = res.data.data
-          this.list.appImage='http://localhost:3000/' + res.data.data.appImage.replace(/\\/g, '/')
-          // console.log(this.list)
-          // var test = res.data.data[1].appImage
-          // console.log(test)
-          // var tests = test.replace(/\\/g, '/')
-          // console.log(tests)
-        }
-      })
+        uni.request({
+          url: 'http://localhost:3000/club/userclubinfo',
+          method: 'post',
+          data: {
+            cid: this.cid
+          },
+          success: (res) => {
+            console.log(res.data.data);
+            this.list = res.data.data
+            this.list.appImage='http://localhost:3000/' + res.data.data.appImage.replace(/\\/g, '/')
+            // console.log(this.list)
+            // var test = res.data.data[1].appImage
+            // console.log(test)
+            // var tests = test.replace(/\\/g, '/')
+            // console.log(tests)
+          }
+        })
     }
   }
 }
@@ -122,6 +132,10 @@ export default {
 /*#ifdef MP-WEIXIN*/
 .main{
   width: 750rpx;
+}
+.myimg{
+  width: 550rpx;
+  height: 550rpx;
 }
 /*#endif*/
 

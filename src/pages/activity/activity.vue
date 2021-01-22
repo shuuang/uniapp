@@ -2,7 +2,7 @@
   <div class="main">
     <view class="uni-list">
       <block v-for="(value, index) in listData" :key="index">
-        <view class="uni-list-cell" hover-class="uni-list-cell-hover" @click="goDetail(value)">
+        <view class="uni-list-cell" hover-class="uni-list-cell-hover" @click="goDetail(value.aid)">
           <view class="uni-media-list">
 <!--            <image class="uni-media-list-logo" :src="value.cover"></image>-->
             <image class="uni-media-list-logo" src="../../static/logo.png"></image>
@@ -48,6 +48,18 @@ export default {
     }).then(res => {
         console.log(res.data)
         this.listData = res.data
+      })
+    },
+    goDetail(aid){
+      console.log(aid)
+      uni.setStorage({
+        key: 'aid',
+        data: aid,
+        success: function (aid){
+          uni.navigateTo({
+            url: '/pages/activityDetail/index'
+          })
+        }
       })
     }
   }

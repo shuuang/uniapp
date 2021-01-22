@@ -98,27 +98,25 @@ export default {
       // uni.redirectTo({
       //   url: '/pages/clubDetail/index?cid=' + cid
       // })
-      // uni.setStorage({
-      //   key: 'cid',
-      //   data: 30,
-      //   success: function (cid){
-      //     console.log('555')
-      //   }
-      // })
-      // uni.navigateTo({
-      //   url: '/pages/clubDetail/index'
-      // })
       uni.setStorage({
         key: 'cid',
         data: cid,
-        success: function () {
-          console.log("test")
-
+        success: function (cid){
+          uni.navigateTo({
+            url: '/pages/clubDetail/index'
+          })
         }
-      });
-      uni.navigateTo({
-        url: '/pages/test1/index'
-      });
+      })
+      // uni.setStorage({
+      //   key: 'cid',
+      //   data: cid,
+      //   success: function () {
+      //     console.log("test")
+      //   }
+      // });
+      // uni.navigateTo({
+      //   url: '/pages/test1/index'
+      // });
     }
   }
 }

@@ -2,8 +2,8 @@
   <view class="top-window-header">
     <view class="left-header logo">
       <navigator class="logo" open-type="reLaunch" url="/pages/index/index">
-        <img src="../static/logo.png" mode="heightFix" style="width: 30px;"></img>
-        <text>uniapp测试站</text>
+        <img src="../static/xi.png" mode="heightFix" ></img>
+        <text></text>
 <!--        <page-head :title="title"></page-head>-->
       </navigator>
     </view>

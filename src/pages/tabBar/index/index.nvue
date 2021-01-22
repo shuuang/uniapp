@@ -9,7 +9,7 @@
     </view>
     <view class="example-body">
       <uni-grid :column="2" :highlight="true" @change="Detail">
-        <uni-grid-item v-for="(item, index) in list" :index="index" :key="index">
+        <uni-grid-item v-for="(item, index) in list" :index="item.cid" :key="index">
           <view class="grid-item-box" :style="{backgroundImage: 'url(http://localhost:3000/'+item.appImage+')'}">
             <text class="text">{{ item.cname }}</text>
           </view>
@@ -54,9 +54,18 @@ export default {
       })
     },
     Detail(cid) {
-      console.log(cid)
-      uni.redirectTo({
-        url: `/pages/clubDetail/index?cid=${cid}`
+      // console.log(cid)
+      // uni.redirectTo({
+      //   url: `/pages/clubDetail/index?cid=${cid}`
+      // })
+      uni.setStorage({
+        key: 'cid',
+        data: cid,
+        success: function (cid){
+          uni.navigateTo({
+            url: '/pages/clubDetail/index'
+          })
+        }
       })
     }
   }

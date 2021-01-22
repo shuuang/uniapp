@@ -75,6 +75,9 @@
           "width": "100%"
         }
       }
+    },
+    {
+      "path": "pages/activityDetail/index"
     }
   ],
   "globalStyle": {

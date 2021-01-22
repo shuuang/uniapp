@@ -1,16 +1,45 @@
 <template>
   <div class="main">
     <view class="example-body">
-      <uni-card :is-shadow="true" title="标题文字" mode="style" thumbnail="/static/cardbg.png" extra="额外信息" @click="clickCard">
-        <text class="content-box-text">图文卡片支持传入一张图片，在最上方显示，标题作为图片描述，额外信息作为内容标题，通常作用为作者信息或发布时间描述，自行配置是否需要底部信息</text>
+      <uni-card :is-shadow="true" :title="list.realname" mode="style" thumbnail="/static/cardbg.png" :extra="list.classes" @click="clickCard">
+        <text class="content-box-text"></text>
       </uni-card>
     </view>
   </div>
 </template>
 
 <script>
+import api from '@/utils/requests.js'
+import store from '@/store'
+import getters from "@/store/getters";
 export default {
-  name: "index"
+  name: "index",
+  data(){
+    return {
+      list:{
+        realname: '未登录',
+        classes: '班级'
+      }
+    }
+  },
+  mounted() {
+    console.log(store.getters.token)
+    this.usersInfo()
+  },
+  methods: {
+    usersInfo() {
+      if (store.getters.token){
+        api({
+          url: 'users/usersinfo',
+          method: 'get'
+        }).then(res => {
+          // console.log(res)
+          this.list = res.data
+          // this.list.classes = res.data.class
+        })
+      }
+    }
+  }
 }
 </script>
 
