@@ -78,7 +78,7 @@
 <script>
 import Index from "@/pages/index/index";
 import api from '@/utils/requests.js'
-import { getInfo } from "@/api/user";
+import {getInfo} from "@/api/user";
 
 export default {
   name: "login",
@@ -114,13 +114,33 @@ export default {
   },
   methods: {
     login() {
-      this.$store.dispatch('user/login', {username: this.username, password: this.password}).then(
-          () => {
+      api({
+        url: 'users/login',
+        method: 'post',
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      }).then(res => {
+        // console.log(res)
+        uni.setStorage({
+          key: 'token',
+          data: res.data.token,
+          success: () => {
             uni.navigateBack({
               delta: 1
             })
           }
-      )
+        })
+      })
+      // this.$store.dispatch('user/login', {username: this.username, password: this.password}).then(
+      //     () => {
+      //
+      //       uni.navigateBack({
+      //         delta: 1
+      //       })
+      //     }
+      // )
     },
     register() {
       api({
@@ -144,17 +164,17 @@ export default {
         // console.log(res)
         if (res.code === 20000) {
           this.username = '',
-          this.password = '',
-          this.realname = '',
-          this.email = '',
-          this.wechat = '',
-          this.qq = '',
-          this.phone = '',
-          this.home = '',
-          this.birthday = '',
-          this.classes = '',
-          this.nation = '',
-          this.gender = ''
+              this.password = '',
+              this.realname = '',
+              this.email = '',
+              this.wechat = '',
+              this.qq = '',
+              this.phone = '',
+              this.home = '',
+              this.birthday = '',
+              this.classes = '',
+              this.nation = '',
+              this.gender = ''
         }
       })
     },

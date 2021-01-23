@@ -10,10 +10,18 @@ const api = axios.create({
 //请求拦截
 api.interceptors.request.use(
     config => {
-        if (store.getters.token) {
-            // config.headers['X-Token'] = getToken()
-            config.headers['X-Token'] = store.getters.token
-        }
+        uni.getStorage({
+            key: 'token',
+            success: result => {
+                if (result.data){
+                    config.headers['X-Token'] = result.data
+                }
+            }
+        })
+        // if (store.getters.token) {
+        //     // config.headers['X-Token'] = getToken()
+        //     config.headers['X-Token'] = store.getters.token
+        // }
 
         return config
     },
@@ -26,7 +34,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(response => {
         // console.log(response)
     const res = response.data
-        console.log(res)
+        // console.log(res)
     if (res.code !== 20000){
         console.log("response !== 20000")
         if (res.code === 50008 || res.code === 50012 || res.code ===50014){
