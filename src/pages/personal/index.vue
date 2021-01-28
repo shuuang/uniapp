@@ -2,17 +2,23 @@
   <div class="main">
     <view class="example-body">
       <uni-card :is-shadow="true" :title="list.realname" mode="style" thumbnail="/static/cardbg.png"
-                :extra="list.classes" @click="clickCard">
+                :extra="'班级：' + list.classes +' '+ '学号：' + list.stuNumber">
         <text class="content-box-text"></text>
       </uni-card>
+    </view>
+    <view class="list">
+      <uni-section title="已加入社团" type="line"></uni-section>
+      <uni-list-item v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+      <uni-list-item v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+    </view>
+    <view class="list">
+      <uni-list-item showArrow title="修改密码" rightText="右侧文字"/>
     </view>
   </div>
 </template>
 
 <script>
 import api from '@/utils/requests.js'
-import store from '@/store'
-import getters from "@/store/getters";
 
 export default {
   name: "index",
@@ -20,15 +26,22 @@ export default {
     return {
       list: {
         realname: '未登录',
-        classes: '班级'
+        classes: '班级',
+        stuNumber: ''
       },
-      token: ''
+      token: '',
+      club: []
     }
   },
-  mounted() {
+  created() {
     this.getToken()
     if (this.token) {
       this.usersInfo()
+      this.getClubList()
+    }else {
+      uni.navigateTo({
+        url: '/pages/login/login'
+      })
     }
   },
   methods: {
@@ -39,7 +52,7 @@ export default {
       }).then(res => {
         // console.log(res)
         this.list = res.data
-        // this.list.classes = res.data.class
+        this.list.classes = res.data.class
       })
     },
     getToken() {
@@ -49,6 +62,15 @@ export default {
           console.log(res.data)
           this.token = res.data
         }
+      })
+    },
+    getClubList() {
+      api({
+        url: 'clubuser/userclublist',
+        method: 'get'
+      }).then(res => {
+        // console.log(res)
+        this.club = res.data
       })
     }
   }
@@ -73,5 +95,9 @@ export default {
 .main {
   /*width: 80%;*/
   margin: 0 auto;
+}
+
+.list {
+  padding: 10px 15px;
 }
 </style>

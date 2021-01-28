@@ -78,6 +78,12 @@
     },
     {
       "path": "pages/activityDetail/index"
+    },
+    {
+      "path": "pages/activityLog/index"
+    },
+    {
+      "path": "pages/login/notlogin"
     }
   ],
   "globalStyle": {

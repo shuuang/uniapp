@@ -36,9 +36,10 @@ api.interceptors.response.use(response => {
     const res = response.data
         // console.log(res)
     if (res.code !== 20000){
-        console.log("response !== 20000")
+        // console.log("response !== 20000")
         if (res.code === 50008 || res.code === 50012 || res.code ===50014){
-            console.log("res.code不对")
+            // console.log("res.code不对")
+            return res
         }
     return Promise.reject(new Error(res.msg || "error"))
     }else {

@@ -122,14 +122,23 @@ export default {
           password: this.password
         }
       }).then(res => {
-        // console.log(res)
         uni.setStorage({
           key: 'token',
           data: res.data.token,
           success: () => {
-            uni.navigateBack({
-              delta: 1
-            })
+            uni.$emit('usersnameChange', false)
+            let pages = getCurrentPages();
+            if (pages.length>1){
+              uni.navigateBack({
+                delta: 1,
+                success: () => {
+                  let beforePage = pages[pages.length - 2];
+                  console.log(beforePage)
+                  beforePage.usersInfo();//执行前一个页面的onload方法
+                }
+              })
+            }
+            // history.back()
           }
         })
       })
@@ -201,10 +210,20 @@ export default {
 </script>
 
 <style scoped>
+
+/*#ifdef MP-WEIXIN*/
+.login {
+  width: 750rpx;
+  margin: 0 auto;
+}
+/*#endif*/
+
+/*#ifdef H5*/
 .login {
   width: 50%;
   margin: 0 auto;
 }
+/*#endif*/
 
 .uni-input {
   border: 1px solid #a2a2a2;

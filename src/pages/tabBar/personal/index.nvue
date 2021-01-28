@@ -1,16 +1,78 @@
 <template>
   <div class="main">
     <view class="example-body">
-      <uni-card :is-shadow="true" title="标题文字" mode="style" thumbnail="/static/cardbg.png" extra="额外信息" @click="clickCard">
-        <text class="content-box-text">图文卡片支持传入一张图片，在最上方显示，标题作为图片描述，额外信息作为内容标题，通常作用为作者信息或发布时间描述，自行配置是否需要底部信息</text>
+      <uni-card :is-shadow="true" :title="list.realname" mode="style" thumbnail="/static/cardbg.png"
+                :extra="'班级：' + list.classes +' '+ '学号：' + list.stuNumber">
+        <text class="content-box-text"></text>
       </uni-card>
+    </view>
+    <view class="list">
+      <uni-section title="已加入社团" type="line"></uni-section>
+      <uni-list-item v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+      <uni-list-item v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+    </view>
+    <view class="list">
+      <uni-list-item showArrow title="修改密码" rightText="右侧文字"/>
     </view>
   </div>
 </template>
 
 <script>
+import api from '@/utils/requests.js'
 export default {
-  name: "index"
+  name: "index",
+  data() {
+    return {
+      list: {
+        realname: '未登录',
+        classes: '班级',
+        stuNumber: ''
+      },
+      token: '',
+      club: []
+    }
+  },
+  created() {
+    this.getToken()
+    if (this.token) {
+      this.usersInfo()
+      this.getClubList()
+    }else {
+      uni.redirectTo({
+        url: '/pages/login/login'
+      })
+    }
+  },
+  methods: {
+    usersInfo() {
+      api({
+        url: 'users/usersinfo',
+        method: 'get'
+      }).then(res => {
+        // console.log(res)
+        this.list = res.data
+        this.list.classes = res.data.class
+      })
+    },
+    getToken() {
+      uni.getStorage({
+        key: 'token',
+        success: (res) => {
+          console.log(res.data)
+          this.token = res.data
+        }
+      })
+    },
+    getClubList() {
+      api({
+        url: 'clubuser/userclublist',
+        method: 'get'
+      }).then(res => {
+        // console.log(res)
+        this.club = res.data
+      })
+    }
+  }
 }
 </script>
 
@@ -30,5 +92,9 @@ export default {
 .main {
   /*width: 80%;*/
   margin: 0 auto;
+}
+
+.list {
+  padding: 10px 15px;
 }
 </style>

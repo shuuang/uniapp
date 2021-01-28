@@ -51,6 +51,14 @@
         </view>
       </view>
     </view>
+    <uni-section title="活动相关社团记录" type="line"></uni-section>
+    <view class="example-body">
+      <uni-card v-for="item in activityLog" @click="logDetail(item.alid)">
+        <text class="content-box-text">
+          {{ item.alintroduction }}
+        </text>
+      </uni-card>
+    </view>
   </div>
 </template>
 
@@ -65,7 +73,8 @@ export default {
         users: {
 
         }
-      }
+      },
+      activityLog: []
     }
   },
   created() {
@@ -95,17 +104,16 @@ export default {
     //   this.getDetail()
     // },
     getDetail() {
-      // api({
-      //   url: 'club/userclubinfo',
-      //   method: 'post',
-      //   data: {
-      //     cid: this.cid
-      //   }
-      // }).then(res => {
-      //   console.log(res.data)
-      //   this.list = res.data
-      //   this.list.appImage='http://localhost:3000/' + res.data.appImage.replace(/\\/g, '/')
-      // })
+      api({
+        url: 'activitylog/loglist',
+        method: 'get',
+        params: {
+          cid: this.cid
+        }
+      }).then(res => {
+        console.log(res.data)
+        this.activityLog = res.data
+      })
         uni.request({
           url: 'http://localhost:3000/club/userclubinfo',
           method: 'post',
@@ -123,6 +131,17 @@ export default {
             // console.log(tests)
           }
         })
+    },
+    logDetail(alid){
+      uni.setStorage({
+        key: 'alid',
+        data: alid,
+        success: ()=>{
+          uni.navigateTo({
+            url: '/pages/activityLog/index'
+          })
+        }
+      })
     }
   }
 }
@@ -156,5 +175,13 @@ export default {
 .uni-list-cell-left{
   font-weight: 600;
   /*width: 150px;*/
+}
+
+/deep/ .uni-card{
+  margin: 0px;
+  border-radius: 0px;
+}
+/deep/ .uni-border:after{
+  border-radius: 0px;
 }
 </style>

@@ -51,7 +51,7 @@ export default {
       })
     },
     goDetail(aid){
-      console.log(aid)
+      // console.log(aid)
       uni.setStorage({
         key: 'aid',
         data: aid,
