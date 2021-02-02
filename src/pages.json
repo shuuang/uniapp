@@ -32,10 +32,16 @@
       "path": "pages/tabBar/test3/index"
     },
     {
-      "path": "pages/tabBar/activity/activity"
+      "path": "pages/tabBar/activity/activity",
+      "style": {
+        "navigationBarTitleText": "活动"
+      }
     },
     {
-      "path": "pages/tabBar/personal/index"
+      "path": "pages/tabBar/personal/index",
+      "style": {
+        "navigationBarTitleText": "个人中心"
+      }
     },
     //		vue
     {
@@ -62,7 +68,10 @@
     },
     // 其他页面
     {
-      "path": "pages/login/login"
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
     },
     {
       "path": "pages/clubDetail/index",
@@ -84,6 +93,21 @@
     },
     {
       "path": "pages/login/notlogin"
+    },
+    {
+      "path": "pages/login/changePwd",
+      "style": {
+        "navigationBarTitleText": "修改密码"
+      }
+    },
+    {
+      "path": "pages/personal/info",
+      "style": {
+        "navigationBarTitleText": "个人信息"
+      }
+    },
+    {
+      "path": "pages/activityLog/editLog"
     }
   ],
   "globalStyle": {

@@ -1,8 +1,9 @@
 <template>
   <div class="login">
-    <view class="example-body">
-      <view class="example-box">
-        <uni-card :title="title" :isFull="true" isShadow='true'>
+    <div class="mycard">
+      <!--    #ifdef H5-->
+      <p style="font-size: 16px">{{ title }}</p>
+      <!--    #endif-->
           <form>
             <view class="uni-form-item uni-column">
               <view class="title">学号</view>
@@ -69,9 +70,7 @@
             <button v-show="flag==false" class="mybutton" plain="true" @click="goLogin">已有账号，直接登录</button>
             <button v-show="flag==false" class="mybutton" plain="true" @click="register">注册</button>
           </view>
-        </uni-card>
-      </view>
-    </view>
+    </div>
   </div>
 </template>
 
@@ -128,16 +127,34 @@ export default {
           success: () => {
             uni.$emit('usersnameChange', false)
             let pages = getCurrentPages();
+            // #ifdef H5
             if (pages.length>1){
               uni.navigateBack({
                 delta: 1,
                 success: () => {
                   let beforePage = pages[pages.length - 2];
-                  console.log(beforePage)
+                  console.log(pages)
                   beforePage.usersInfo();//执行前一个页面的onload方法
+                  beforePage.getClubList
                 }
               })
             }
+            // #endif
+            // #ifdef MP-WEIXIN
+            // uni.reLaunch({
+            //   url: '/pages/tabBar/personal/index'
+            // })
+            uni.switchTab({
+              url: '/pages/tabBar/personal/index',
+              // delta: 1,
+              success: ()=>{
+                // let beforePage = pages[2];
+                // console.log(pages)
+                // beforePage.usersInfo()
+                uni.$emit("personal", '5555')
+              }
+            })
+            // #endif
             // history.back()
           }
         })
@@ -190,10 +207,12 @@ export default {
     goRegisiter() {
       // console.log('去注册')
       this.flag = false
+      this.title = "注册"
     },
     goLogin() {
       // console.log('去登录')
       this.flag = true
+      this.title = "登录"
     },
     radioChange: function (evt) {
       // console.log(evt.target.value)
@@ -216,12 +235,34 @@ export default {
   width: 750rpx;
   margin: 0 auto;
 }
+.mycard{
+  background-color: rgba(0,0,0,0);
+  padding: 20px;
+}
+.myinput{
+  border: 1px solid black;
+  /*height: 10px;*/
+  border-radius: 5px;
+  padding: 5px;
+}
 /*#endif*/
 
 /*#ifdef H5*/
 .login {
   width: 50%;
   margin: 0 auto;
+}
+.mycard{
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 0px 10px 4px #888888;
+}
+.myinput{
+  background-color: white;
+  border: 1px solid #494949;
+  /*height: 10px;*/
+  border-radius: 5px;
+  padding: 5px;
 }
 /*#endif*/
 

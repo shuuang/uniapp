@@ -5,10 +5,10 @@
       <span class="info">记录社团：{{ log.club.cname }}</span>
       <span class="info">记录时间：{{ log.aldate }}</span>
     </view>
-    <view class="uni-center" style="background:#FFFFFF; font-size:0;padding: 20px">
-      <image class="image" mode="widthFix" :src="'http://localhost:3000/'+ log.img"/>
+    <view class="uni-center" style="background:#FFFFFF; font-size:0;padding: 20px;">
+      <image class="image mycard" mode="widthFix" :src="'http://localhost:3000/'+ log.img"/>
       <view class="uni-padding-wrap uni-common-mt">
-        <view>
+        <view class="mycard">
           <video id="myVideo" src="@/static/videos.mp4"
                  controls poster="@/static/association.png"></video>
         </view>
@@ -60,7 +60,7 @@ export default {
     // console.log(this.aid)
     // #endif
     // #ifdef MP-WEIXIN
-    this.alid = uni.getStorageSync('alid').detail.index
+    this.alid = uni.getStorageSync('alid')
     // #endif
 
     this.getLog()
@@ -117,14 +117,26 @@ export default {
 .main {
   width: 750 rpx;
 }
-
+.info{
+  font-size: 10px;
+  margin-right: 10px;
+}
+image{
+  width: 550rpx;
+}
+video{
+  width: 100%;
+}
 /*#endif*/
 
 /*#ifdef H5*/
 .main {
   width: 80%;
 }
-
+.info{
+  font-size: 13px;
+  margin-right: 30px;
+}
 /*#endif*/
 
 .main {
@@ -140,8 +152,6 @@ export default {
 
 .info {
   color: #878787;
-  margin-right: 30px;
-  font-size: 13px;
 }
 
 .example-body {

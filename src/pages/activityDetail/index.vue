@@ -27,7 +27,7 @@
       </view>
       <view class="uni-list-cell">
         <view class="uni-list-cell-left">
-          活动社团
+          活动简介
         </view>
         <view class="uni-list-cell-db">
           {{ list.club.cname }}
@@ -50,6 +50,7 @@ import api from '@/utils/requests.js'
 
 export default {
   name: "index",
+  options: { styleIsolation: 'apply-shared' },
   data() {
     return {
       aid: '',
@@ -74,7 +75,8 @@ export default {
     // console.log(this.aid)
     // #endif
     // #ifdef MP-WEIXIN
-    this.aid = uni.getStorageSync('aid').detail.index
+    this.aid = uni.getStorageSync('aid')
+    // console.log(this.aid)
     // #endif
     // console.log(this.aid)
     this.getDetail()

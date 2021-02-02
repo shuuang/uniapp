@@ -1,11 +1,11 @@
 <template>
   <div class="main">
     <view class="uni-list">
-      <block v-for="(value, index) in listData" :key="index">
+      <block v-for="value in listData" :key="value.aid">
         <view class="uni-list-cell" hover-class="uni-list-cell-hover" @click="goDetail(value.aid)">
           <view class="uni-media-list">
 <!--            <image class="uni-media-list-logo" :src="value.cover"></image>-->
-            <image class="uni-media-list-logo" src="../../static/logo.png"></image>
+            <image class="uni-media-list-logo" src="@/static/logo.png"></image>
             <view class="uni-media-list-body">
               <view class="uni-media-list-text-top">{{ value.aName }}</view>
               <view class="uni-media-list-text-bottom">
@@ -15,11 +15,6 @@
             </view>
           </view>
         </view>
-        <!-- #ifdef APP-PLUS -->
-        <view class="ad-view" v-if="(index > 0 && (index+1) % 10 == 0)">
-          <ad :adpid="adpid" @error="aderror"></ad>
-        </view>
-        <!-- #endif -->
       </block>
     </view>
   </div>
@@ -51,7 +46,7 @@ export default {
       })
     },
     goDetail(aid){
-      // console.log(aid)
+      console.log(aid)
       uni.setStorage({
         key: 'aid',
         data: aid,
@@ -61,6 +56,7 @@ export default {
           })
         }
       })
+      // uni.setStorageSync('aid','aid')
     }
   }
 }

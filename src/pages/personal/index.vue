@@ -2,17 +2,18 @@
   <div class="main">
     <view class="example-body">
       <uni-card :is-shadow="true" :title="list.realname" mode="style" thumbnail="/static/cardbg.png"
-                :extra="'班级：' + list.classes +' '+ '学号：' + list.stuNumber">
+                :extra="'班级：' + list.classes +' '+ '学号：' + list.stuNumber" @click="info">
         <text class="content-box-text"></text>
       </uni-card>
     </view>
     <view class="list">
       <uni-section title="已加入社团" type="line"></uni-section>
-      <uni-list-item v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
-      <uni-list-item v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+      <uni-list-item clickable @click="editLog" v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
     </view>
     <view class="list">
-      <uni-list-item showArrow title="修改密码" rightText="右侧文字"/>
+      <uni-list-item clickable @click="applyClub" showArrow title="申请创建社团" rightText="右侧文字"/>
+      <uni-list-item clickable @click="joinClub" showArrow title="申请加入社团" rightText="右侧文字"/>
+      <uni-list-item clickable @click="changepwd" showArrow title="修改密码" rightText="右侧文字"/>
     </view>
   </div>
 </template>
@@ -71,6 +72,29 @@ export default {
       }).then(res => {
         // console.log(res)
         this.club = res.data
+      })
+    },
+    changepwd() {
+      uni.redirectTo({
+        url: '/pages/login/changePwd'
+      })
+      // api.post('users/repassword',{newpassword: this.newpassword})
+    },
+    info(){
+      console.log('用户信息')
+      uni.navigateTo({
+        url: '/pages/personal/info'
+      })
+    },
+    applyClub(){
+      console.log('申请社团')
+    },
+    joinClub(){
+      console.log('加入社团')
+    },
+    editLog(){
+      uni.navigateTo({
+        url: '/pages/activityLog/editLog'
       })
     }
   }
