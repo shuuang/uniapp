@@ -1,8 +1,10 @@
 <template>
 	<view class="upload-box">
 		<view class="con">
-			<view ref="fileInput" class="fileinput"></view>
-			<button class="upload-btn" type="default" @tab="uploadFile">附件上传</button>
+			<view ref="fileInput" class="fileinput">
+<!--        <input type="file" multiple="multiple" />-->
+      </view>
+<!--			<button class="upload-btn" type="default" @click="uploadFile">附件上传</button>-->
 		</view>
 		<text class="filetxt" v-for="file in files" :key="file.name">{{file.name}}</text>
 	</view>
@@ -10,8 +12,10 @@
 
 <script>
 
+import Index from "@/pages/tabBar/index/index";
 export default {
-	props: {
+  components: {Index},
+  props: {
 		/**
 		 * 模式  asyn异步；await同步
 		 */
@@ -33,8 +37,9 @@ export default {
 		}
 	},
 	mounted() {
-		var input = document.createElement('input')  
-		input.type = 'file'; 
+		// var input = document.getElementsByTagName('input')
+		var input = document.createElement('input')
+		input.type = 'file';
 		if( this.multiple ){
 			input.setAttribute("multiple","multiple")
 		}
@@ -47,7 +52,7 @@ export default {
 				}
 			}
 		}  
-		this.$refs.fileInput.$el.appendChild(input)  
+		this.$refs.fileInput.$el.appendChild(input)
 	},
 	data() {
 		return {
@@ -56,7 +61,7 @@ export default {
 		};
 	},
 	methods: {
-		uploadFile:function(reqParams,callback){
+		uploadFile:function(callback){
 			if( this.reqUrl == "" ){
 				uni.showToast({
 					title: "请求路径不能为空",
@@ -67,13 +72,13 @@ export default {
 				let fData = new FormData();
 				//批量上传
 				for(var j=0;j<this.files.length;j++){
-					fData.append(this.filed+(j==0?'':j+1),this.files[j]);
+					fData.append(this.filed,this.files[j]);
 				}
-				if(null!= reqParams && Object.keys(reqParams).length>0){
-					fData =this.convertObj( fData,reqParams )
-				}
+				// if(null!= reqParams && Object.keys(reqParams).length>0){
+				// 	fData =this.convertObj( fData,reqParams )
+				// }
 				let xhr = new XMLHttpRequest();
-				xhr.open("POST",apiUrl+this.reqUrl, true);
+				xhr.open("POST",this.reqUrl, true);
 				let _this = this;
 				xhr.onload = function(e) { 
 					let resposeJson = JSON.parse(xhr.responseText);

@@ -13,8 +13,9 @@ api.interceptors.request.use(
         uni.getStorage({
             key: 'token',
             success: result => {
+                console.log(result)
                 if (result.data){
-                    config.headers['X-Token'] = result.data
+                    config.headers['x-Token'] = result.data
                 }
             }
         })
@@ -39,9 +40,9 @@ api.interceptors.response.use(response => {
         // console.log("response !== 20000")
         if (res.code === 50008 || res.code === 50012 || res.code ===50014){
             // console.log("res.code不对")
-            return res
+            return Promise.reject(new Error(res.msg || "error"))
         }
-    return Promise.reject(new Error(res.msg || "error"))
+        return res
     }else {
         return res
     }

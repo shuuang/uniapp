@@ -6,10 +6,12 @@
       <span class="info">记录时间：{{ log.aldate }}</span>
     </view>
     <view class="uni-center" style="background:#FFFFFF; font-size:0;padding: 20px;">
-      <image class="image mycard" mode="widthFix" :src="'http://localhost:3000/'+ log.img"/>
+      <view v-for="(item,index) in imgs">
+        <image class="image mycard" mode="widthFix" :src=item />
+      </view>
       <view class="uni-padding-wrap uni-common-mt">
-        <view class="mycard">
-          <video id="myVideo" src="@/static/videos.mp4"
+        <view v-for="item in videos">
+          <video class="mycard" id="myVideo" :src=item
                  controls poster="@/static/association.png"></video>
         </view>
       </view>
@@ -49,6 +51,8 @@ export default {
           cname: ''
         }
       },
+      imgs:[],
+      videos: [],
       alid: '',
       comments: [],
       comment: ''
@@ -76,7 +80,19 @@ export default {
         }
       }).then(res => {
         console.log(res)
+        // res.data = JSON.parse(res.data.img)
         this.log = res.data
+        var imglist = JSON.parse(res.data.img).img
+        imglist.forEach(item => {
+          // console.log(item)
+          this.imgs.push(item.replace(/\\/g, '/'))
+        })
+        var videolist = JSON.parse(res.data.video).video
+        videolist.forEach(item => {
+          // console.log(item)
+          this.videos.push(item.replace(/\\/g, '/'))
+        })
+        // console.log(this.imgs)
       })
     },
     getComments() {
@@ -101,7 +117,7 @@ export default {
           alid: this.alid
         }
       }).then(res => {
-        // console.log(res)
+        console.log(res)
         if (res.code==20000){
           this.getComments()
           this.comment = ''
@@ -136,6 +152,9 @@ video{
 .info{
   font-size: 13px;
   margin-right: 30px;
+}
+.mycard{
+  width: 60%;
 }
 /*#endif*/
 

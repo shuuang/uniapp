@@ -8,7 +8,7 @@
     </view>
     <view class="list">
       <uni-section title="已加入社团" type="line"></uni-section>
-      <uni-list-item clickable @click="editLog" v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+      <uni-list-item clickable @click="editLog(item.cid,item.club.cname)" v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
     </view>
     <view class="list">
       <uni-list-item clickable @click="applyClub" showArrow title="申请创建社团" rightText="右侧文字"/>
@@ -70,7 +70,7 @@ export default {
         url: 'clubuser/userclublist',
         method: 'get'
       }).then(res => {
-        // console.log(res)
+        console.log(res)
         this.club = res.data
       })
     },
@@ -88,13 +88,16 @@ export default {
     },
     applyClub(){
       console.log('申请社团')
+      uni.navigateTo({
+        url: '/pages/club/applyClub'
+      })
     },
     joinClub(){
       console.log('加入社团')
     },
-    editLog(){
+    editLog(cid,cname){
       uni.navigateTo({
-        url: '/pages/activityLog/editLog'
+        url: `/pages/activityLog/editLog?cid=${cid}&cname=${cname}`
       })
     }
   }

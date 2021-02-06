@@ -108,6 +108,9 @@
     },
     {
       "path": "pages/activityLog/editLog"
+    },
+    {
+      "path": "pages/club/applyClub"
     }
   ],
   "globalStyle": {
