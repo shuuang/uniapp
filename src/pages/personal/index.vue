@@ -87,7 +87,7 @@ export default {
       })
     },
     applyClub(){
-      console.log('申请社团')
+      // console.log('申请社团')
       uni.navigateTo({
         url: '/pages/club/applyClub'
       })

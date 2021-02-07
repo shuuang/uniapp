@@ -107,10 +107,16 @@
       }
     },
     {
-      "path": "pages/activityLog/editLog"
+      "path": "pages/activityLog/editLog",
+      "style": {
+        "navigationBarTitleText": "编辑活动记录"
+      }
     },
     {
-      "path": "pages/club/applyClub"
+      "path": "pages/club/applyClub",
+      "style": {
+        "navigationBarTitleText": "申请社团"
+      }
     }
   ],
   "globalStyle": {

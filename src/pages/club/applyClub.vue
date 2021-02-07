@@ -7,15 +7,15 @@
       <form>
         <view class="uni-form-item uni-column">
           <view class="title">社团名称</view>
-          <input class="myinput" v-model="cname" placeholder="社团名称">
+          <input class="uni-input" v-model="cname" placeholder="社团名称">
         </view>
         <view class="uni-form-item uni-column">
           <view class="title">指导教师</view>
-          <input class="myinput" v-model="teacher" placeholder="指导教师">
+          <input class="uni-input" v-model="teacher" placeholder="指导教师">
         </view>
         <view class="uni-form-item uni-column">
           <view class="title">社团简介</view>
-          <input class="myinput" v-model="introduction" placeholder="社团简介">
+          <input class="uni-input" v-model="introduction" placeholder="社团简介">
         </view>
         <view class="uni-form-item uni-column">
           <view class="title">社团Logo</view>
@@ -148,16 +148,18 @@ export default {
 </script>
 
 <style scoped>
+/*#ifdef MP-WEIXIN*/
 .main {
-  width: 750 rpx;
+  width: 750rpx;
 }
 .mycard{
   background-color: rgba(0,0,0,0);
-  padding: 20px;
+  padding: 10px;
+  /*width: 750rpx;*/
 }
 .myinput{
   border: 1px solid black;
-  /*height: 10px;*/
+  height: 10px;
   border-radius: 5px;
   padding: 5px;
 }

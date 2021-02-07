@@ -36,28 +36,40 @@
           活动图片
         </view>
         <view class="uni-list-cell-db">
-          <view class="content">
-            <uploadFile reqUrl="http://localhost:3000/activitylog/logupload"
-                        reqMode="await"
-                        ref="upload"
-                        filed="img"
-                        multiple="true">
-            </uploadFile>
+          <lfile ref="lFileimg" @up-success="imgSuccess" reqUrl='http://localhost:3000/activitylog/logupload' filed="img"></lfile>
+          <view class="padding text-center">
+            <view class="padding">
+              <button class="mybutton" @tap="imgUpload">上传</button>
+            </view>
+          </view>
+          <view v-for="imgs in img">
+            {{ imgs }}
           </view>
         </view>
+        <!--        <view class="uni-list-cell-db">-->
+        <!--          <view class="content">-->
+        <!--            <uploadFile reqUrl="http://localhost:3000/activitylog/logupload"-->
+        <!--                        reqMode="await"-->
+        <!--                        ref="upload"-->
+        <!--                        filed="img"-->
+        <!--                        multiple="true">-->
+        <!--            </uploadFile>-->
+        <!--          </view>-->
+        <!--        </view>-->
       </view>
       <view class="uni-list-cell">
         <view class="uni-list-cell-left">
           活动视频
         </view>
         <view class="uni-list-cell-db">
-          <view class="content">
-            <uploadFile reqUrl="http://localhost:3000/activitylog/logupload"
-                        reqMode="await"
-                        ref="uploadvideo"
-                        filed="img"
-                        multiple="true">
-            </uploadFile>
+          <lfile ref="lFilevideo" @up-success="videoSuccess" reqUrl='http://localhost:3000/activitylog/logupload' filed="img"></lfile>
+          <view class="padding text-center">
+            <view class="padding">
+              <button class="mybutton" @tap="videoUpload">上传</button>
+            </view>
+          </view>
+          <view v-for="videos in video">
+            {{ videos }}
           </view>
         </view>
       </view>
@@ -69,11 +81,13 @@
 <script>
 import uploadFile from '@/components/upload'
 import api from "@/utils/requests";
+import lfile from '@/components/l-file'
 
 export default {
   name: "editLog",
   components: {
-    uploadFile
+    uploadFile,
+    lfile
   },
   onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
     // console.log(option); //打印出上个页面传递的参数。
@@ -98,48 +112,95 @@ export default {
     this.getActivity()
   },
   methods: {
+    imgSuccess(res) {
+      console.log('上传成功回调', JSON.stringify(res));
+      console.log(res)
+      if (res.data.code === 20000) {
+        this.img = this.img.concat(res.data.data[0].path)
+        console.log(this.img)
+      }
+      // uni.showToast({
+      //   title: JSON.stringify(res),
+      //   icon: 'none'
+      // })
+    },
+    videoSuccess(res) {
+      console.log('上传成功回调', JSON.stringify(res));
+      console.log(res)
+      if (res.data.code === 20000) {
+        this.video = this.video.concat(res.data.data[0].path)
+        console.log(this.video)
+      }
+      // uni.showToast({
+      //   title: JSON.stringify(res),
+      //   icon: 'none'
+      // })
+    },
     formSubmit() {
-      this.imgUpload()
-      this.videoUpload()
+      // this.imgUpload()
+      // this.videoUpload()
       api({
         url: 'activitylog/addlog',
         method: 'post',
         data: {
           aid: this.aid,
-          img: {img:this.img},
+          img: {img: this.img},
           video: {video: this.video},
-          alintroduction:this.alintroduction,
-          cid:this.cid
+          alintroduction: this.alintroduction,
+          cid: this.cid
         }
       }).then(res => {
         console.log(res)
+        if (res.code === 20000){
+          this.aid = ""
+          this.img = []
+          this.video = []
+          this.alintroduction = ''
+        }
       })
       // console.log('alin', this.alintroduction, 'img',this.img, 'aid', this.aid, 'cid', this.cid, 'video',this.video)
     },
     imgUpload(e) {
-      this.$refs.upload.uploadFile(res => {
-        if (res.code == 20000) {
-          // console.log(res)
-          // this.img = res.data
-          res.data.forEach(item => {
-            this.img.push('http://localhost:3000/'+item.path)
-          })
-          // console.log(this.img)
-        } else {
-
-        }
-      })
+      this.$refs.lFileimg.upload({
+        //非真实地址，记得更换,调试时ios有跨域，需要后端开启跨域并且接口地址不要使用http://localhost/
+        url: 'http://127.0.0.1:3000/activitylog/logupload',
+        //默认file,上传文件的key
+        name: 'img',
+        // header: {'Authorization':'token'},
+        //...其他参数
+      });
+      // this.$refs.upload.uploadFile(res => {
+      //   if (res.code == 20000) {
+      //     // console.log(res)
+      //     // this.img = res.data
+      //     res.data.forEach(item => {
+      //       this.img.push('http://localhost:3000/' + item.path)
+      //     })
+      //     // console.log(this.img)
+      //   } else {
+      //
+      //   }
+      // })
     },
     videoUpload(e) {
-      this.$refs.uploadvideo.uploadFile(res => {
-        if (res.code == 20000) {
-          res.data.forEach(item => {
-            this.video.push('http://localhost:3000/'+item.path)
-          })
-        } else {
-
-        }
-      })
+      // console.log('video')
+      this.$refs.lFilevideo.upload({
+        //非真实地址，记得更换,调试时ios有跨域，需要后端开启跨域并且接口地址不要使用http://localhost/
+        url: 'http://127.0.0.1:3000/activitylog/logupload',
+        //默认file,上传文件的key
+        name: 'img',
+        // header: {'Authorization':'token'},
+        //...其他参数
+      });
+      // this.$refs.uploadvideo.uploadFile(res => {
+      //   if (res.code == 20000) {
+      //     res.data.forEach(item => {
+      //       this.video.push('http://localhost:3000/' + item.path)
+      //     })
+      //   } else {
+      //
+      //   }
+      // })
     },
     bindPickerChange: function (e) {
       // console.log(e)
@@ -180,6 +241,10 @@ page {
   width: 750 rpx;
 }
 
+.uni-list {
+  //width: 750rpx;
+}
+
 /*#endif*/
 
 /*#ifdef H5*/
@@ -202,5 +267,8 @@ page {
 .uni-list-cell-left {
   font-weight: 600;
   /*width: 150px;*/
+}
+.mybutton{
+  color: red;
 }
 </style>

@@ -10,20 +10,24 @@ const api = axios.create({
 //请求拦截
 api.interceptors.request.use(
     config => {
-        uni.getStorage({
-            key: 'token',
-            success: result => {
-                console.log(result)
-                if (result.data){
-                    config.headers['x-Token'] = result.data
-                }
-            }
-        })
+        try{
+            config.headers['x-Token']=uni.getStorageSync("token")
+        }catch (e) {
+            console.log("token err",e)
+        }
+        // uni.getStorage({
+        //     key: 'token',
+        //     success: result => {
+        //         console.log(result)
+        //         if (result.data){
+        //             config.headers['x-Token'] = result.data
+        //         }
+        //     }
+        // })
         // if (store.getters.token) {
         //     // config.headers['X-Token'] = getToken()
         //     config.headers['X-Token'] = store.getters.token
         // }
-
         return config
     },
     error => {
