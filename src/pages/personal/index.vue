@@ -12,7 +12,6 @@
     </view>
     <view class="list">
       <uni-list-item clickable @click="applyClub" showArrow title="申请创建社团" rightText="右侧文字"/>
-      <uni-list-item clickable @click="joinClub" showArrow title="申请加入社团" rightText="右侧文字"/>
       <uni-list-item clickable @click="changepwd" showArrow title="修改密码" rightText="右侧文字"/>
     </view>
   </div>
@@ -91,9 +90,6 @@ export default {
       uni.navigateTo({
         url: '/pages/club/applyClub'
       })
-    },
-    joinClub(){
-      console.log('加入社团')
     },
     editLog(cid,cname){
       uni.navigateTo({

@@ -11,7 +11,7 @@
             </view>
             <view class="uni-form-item uni-column">
               <view class="title">密码</view>
-              <input class="uni-input" v-model="password" placeholder="密码">
+              <input type="password" class="uni-input" v-model="password" placeholder="密码">
             </view>
             <span v-show="flag==false">
               <view class="uni-form-item uni-column">
@@ -135,7 +135,7 @@ export default {
                   let beforePage = pages[pages.length - 2];
                   console.log(pages)
                   beforePage.usersInfo();//执行前一个页面的onload方法
-                  beforePage.getClubList
+                  beforePage.getClubList()
                 }
               })
             }

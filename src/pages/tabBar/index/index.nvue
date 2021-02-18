@@ -2,15 +2,15 @@
   <view>
     <view class="uni-margin-wrap">
       <swiper class="swiper" circular :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-        <swiper-item>
-          <img src="/static/IMG_20200507_223611.jpg" width="100%">
+        <swiper-item v-for="item in imgList">
+          <img :src="'http://localhost:3000/' + item.aafile" width="100%">
         </swiper-item>
       </swiper>
     </view>
     <view class="example-body">
       <uni-grid :column="2" :highlight="true" @change="Detail">
         <uni-grid-item v-for="(item, index) in list" :index="item.cid" :key="index">
-          <view class="grid-item-box" :style="{backgroundImage: 'url(http://localhost:3000/'+item.appImage+')'}">
+          <view class="grid-item-box" :style="{backgroundImage: 'url('+item.appImage+')'}">
             <text class="text">{{ item.cname }}</text>
           </view>
         </uni-grid-item>
@@ -29,12 +29,17 @@ export default {
       autoplay: true,
       interval: 2000,
       duration: 500,
-      list: []
+      list: [],
+      imgList: []
     }
   },
   created() {
-      this.getClubList()
-    },
+    this.getClubList()
+    this.getImg()
+    // #ifdef H5
+    location.href="/#/pages/index/index"
+    // #endif
+  },
   methods: {
     changeIndicatorDots(e) {
       this.indicatorDots = !this.indicatorDots
@@ -51,6 +56,22 @@ export default {
     getClubList(){
       api.post('club/userclublist',{appStatus: 1}).then(res => {
         this.list = res.data.filter(item => item.appImage = item.appImage.replace(/\\/g, '/'))
+        console.log(res)
+      })
+    },
+    getImg(){
+      api({
+        url: 'activity/useractivitylist',
+        method: 'get',
+        params:{
+          astatus: 1
+        }
+      }).then(res=>{
+        // console.log(res)
+        const list = res.data.filter(item => item.aafile = item.aafile.replace(/\\/g, '/')).reverse()
+        // console.log(list.slice(0,3))
+        this.imgList = list.slice(0,3)
+        console.log(this.imgList)
       })
     },
     Detail(cid) {

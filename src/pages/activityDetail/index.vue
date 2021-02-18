@@ -33,6 +33,15 @@
           {{ list.club.cname }}
         </view>
       </view>
+      <view class="uni-list-cell">
+        <view class="uni-list-cell-left">
+          相关文件
+        </view>
+        <view class="uni-list-cell-db">
+<!--          {{ list.aafile }}-->
+          <image :src="list.aafile"></image>
+        </view>
+      </view>
     </view>
     <uni-section title="活动相关社团记录" type="line"></uni-section>
     <view class="example-body">
@@ -93,7 +102,7 @@ export default {
         success: (res) => {
           console.log(res.data);
           this.list = res.data.data
-          // this.list.appImage='http://localhost:3000/' + res.data.data.appImage.replace(/\\/g, '/')
+          this.list.aafile='http://localhost:3000/' + res.data.data.aafile.replace(/\\/g, '/')
         }
       })
     },
@@ -127,9 +136,12 @@ export default {
 <style scoped>
 /*#ifdef MP-WEIXIN*/
 .main {
-  width: 750 rpx;
+  width: 750rpx;
 }
-
+image{
+  width: 550rpx;
+  height: 550rpx;
+}
 /*#endif*/
 
 /*#ifdef H5*/

@@ -12,14 +12,17 @@
     </view>
     <view class="list">
       <uni-list-item clickable @click="applyClub" showArrow title="申请创建社团" rightText="右侧文字"/>
-      <uni-list-item clickable @click="joinClub" showArrow title="申请加入社团" rightText="右侧文字"/>
       <uni-list-item clickable @click="changepwd" showArrow title="修改密码" rightText="右侧文字"/>
+    </view>
+    <view class="list">
+      <uni-list-item clickable @click="logout" showArrow title="注销登录" rightText="右侧文字"/>
     </view>
   </div>
 </template>
 
 <script>
 import api from '@/utils/requests.js'
+import {logout} from "@/api/user";
 export default {
   name: "index",
   data() {
@@ -123,8 +126,18 @@ export default {
         url: '/pages/club/applyClub'
       })
     },
-    joinClub(){
-      console.log('加入社团')
+    logout(){
+      logout().then(res=>{
+        // console.log('注销')
+        if (res.code == 20000){
+          // console.log('zhuxiao')
+          uni.removeStorageSync('token')
+          uni.reLaunch({
+            url: '/pages/tabBar/index/index'
+          })
+          uni.$emit('usersnameChange', false)
+        }
+      })
     },
     editLog(cid,cname){
       uni.navigateTo({

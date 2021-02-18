@@ -51,6 +51,7 @@
         </view>
       </view>
     </view>
+    <button type="default" @click="sign">报名社团</button>
     <uni-section title="活动相关社团记录" type="line"></uni-section>
     <view class="example-body">
       <uni-card v-for="item in activityLog" @click="logDetail(item.alid)">
@@ -59,6 +60,9 @@
         </text>
       </uni-card>
     </view>
+    <uni-popup id="popupDialog" ref="popupDialog" type="dialog">
+      <uni-popup-dialog type="info" title="通知" content="确认报名此社团？" :before-close="true" @confirm="dialogConfirm" @close="dialogClose"></uni-popup-dialog>
+    </uni-popup>
   </div>
 </template>
 
@@ -123,7 +127,7 @@ export default {
           success: (res) => {
             console.log(res.data.data);
             this.list = res.data.data
-            this.list.appImage='http://localhost:3000/' + res.data.data.appImage.replace(/\\/g, '/')
+            this.list.appImage = res.data.data.appImage.replace(/\\/g, '/')
             // console.log(this.list)
             // var test = res.data.data[1].appImage
             // console.log(test)
@@ -142,6 +146,30 @@ export default {
           })
         }
       })
+    },
+    sign(){
+      this.$refs.popupDialog.open()
+    },
+    dialogConfirm(){
+      // 确定按钮
+      // console.log(this.cid)
+      api({
+        url: 'clubuser/addclubuser',
+        method: 'post',
+        data:{
+          cid: this.cid
+        }
+      }).then(res => {
+        // console.log(res)
+        if (res.code == 20000){
+          this.$refs.popupDialog.close()
+        }
+      })
+    },
+    dialogClose(){
+      // 取消
+      this.$refs.popupDialog.close()
+      // done()
     }
   }
 }
@@ -156,11 +184,17 @@ export default {
   width: 550rpx;
   height: 550rpx;
 }
+button{
+  font-size: 13px;
+}
 /*#endif*/
 
 /*#ifdef H5*/
 .main{
   width: 80%;
+}
+button{
+  font-size: 15px;
 }
 /*#endif*/
 

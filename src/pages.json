@@ -86,10 +86,16 @@
       }
     },
     {
-      "path": "pages/activityDetail/index"
+      "path": "pages/activityDetail/index",
+      "style": {
+        "navigationBarTitleText": "活动详情"
+      }
     },
     {
-      "path": "pages/activityLog/index"
+      "path": "pages/activityLog/index",
+      "style": {
+        "navigationBarTitleText": "活动记录"
+      }
     },
     {
       "path": "pages/login/notlogin"

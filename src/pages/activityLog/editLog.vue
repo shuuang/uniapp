@@ -1,5 +1,8 @@
 <template>
   <div class="main">
+    <!--    #ifdef H5-->
+    <page-head title="社团活动记录编辑"></page-head>
+    <!--    #endif-->
     <view class="uni-list">
       <view class="uni-list-cell">
         <view class="uni-list-cell-left">
@@ -25,7 +28,7 @@
           <view class="uni-list-cell-db">
             <view class="uni-list-cell-db">
               <picker @change="bindPickerChange" :value="index" :range="array" range-key="aName">
-                <view class="uni-input">{{ array[index].aName }}</view>
+                <view class="uni-input cname">{{ array[index].aName }}</view>
               </picker>
             </view>
           </view>
@@ -36,14 +39,19 @@
           活动图片
         </view>
         <view class="uni-list-cell-db">
-          <lfile ref="lFileimg" @up-success="imgSuccess" reqUrl='http://localhost:3000/activitylog/logupload' filed="img"></lfile>
-          <view class="padding text-center">
-            <view class="padding">
-              <button class="mybutton" @tap="imgUpload">上传</button>
-            </view>
-          </view>
-          <view v-for="imgs in img">
-            {{ imgs }}
+          <lfile ref="lFileimg" @up-success="imgSuccess" reqUrl='http://localhost:3000/activitylog/logupload'
+                 filed="img"></lfile>
+          <view class="padding">
+            <!--              #ifdef MP-WEIXIN-->
+            <button class="mybutton" @tap="imgUpload">上传</button>
+            <p class="uploadP" v-for="item in img">
+              {{ item }}
+            </p>
+            <!--              #endif-->
+            <!--              #ifdef H5-->
+            <img style="width: 21%;margin-right: 10px" v-for="item in img" :src="'http://localhost:3000/'+item"/>
+            <button class="mybutton" @tap="imgUpload">+</button>
+            <!--              #endif-->
           </view>
         </view>
         <!--        <view class="uni-list-cell-db">-->
@@ -62,16 +70,33 @@
           活动视频
         </view>
         <view class="uni-list-cell-db">
-          <lfile ref="lFilevideo" @up-success="videoSuccess" reqUrl='http://localhost:3000/activitylog/logupload' filed="img"></lfile>
+          <!--          <lfile ref="lFilevideo" @up-success="videoSuccess" reqUrl='http://localhost:3000/activitylog/logupload'-->
+          <!--                 filed="img"></lfile>-->
           <view class="padding text-center">
             <view class="padding">
+              <!--              #ifdef MP-WEIXIN-->
               <button class="mybutton" @tap="videoUpload">上传</button>
+              <p class="uploadP" v-for="videos in video">
+                {{ videos }}
+              </p>
+              <!--              #endif-->
+              <!--              #ifdef H5-->
+              <video v-for="videos in video" :src="'http://localhost:3000/'+videos"></video>
+              <button class="mybutton" @tap="videoUpload">+</button>
+              <!--              #endif-->
             </view>
           </view>
-          <view v-for="videos in video">
-            {{ videos }}
-          </view>
         </view>
+        <!--        <view class="uni-list-cell-db">-->
+        <!--          <view class="content">-->
+        <!--            <uploadFile reqUrl="http://localhost:3000/activitylog/logupload"-->
+        <!--                        reqMode="await"-->
+        <!--                        ref="uploadvideo"-->
+        <!--                        filed="img"-->
+        <!--                        multiple="true">-->
+        <!--            </uploadFile>-->
+        <!--          </view>-->
+        <!--        </view>-->
       </view>
     </view>
     <button @click="formSubmit">提交</button>
@@ -79,6 +104,7 @@
 </template>
 
 <script>
+import PageHead from "@/components/page-head/page-head";
 import uploadFile from '@/components/upload'
 import api from "@/utils/requests";
 import lfile from '@/components/l-file'
@@ -116,8 +142,22 @@ export default {
       console.log('上传成功回调', JSON.stringify(res));
       console.log(res)
       if (res.data.code === 20000) {
-        this.img = this.img.concat(res.data.data[0].path)
-        console.log(this.img)
+        // this.img = this.img.concat(res.data.data[0].path)
+        // console.log(this.img)
+        var list = res.data.data
+        if (res.data.file === "img") {
+          list.forEach(item => {
+            this.img = this.img.concat(item.path)
+          })
+          // this.img = this.img.concat(res.data.data[0].path)
+          console.log(this.img)
+        } else {
+          list.forEach(item => {
+            this.video = this.video.concat(item.path)
+          })
+          console.log(this.video)
+        }
+
       }
       // uni.showToast({
       //   title: JSON.stringify(res),
@@ -139,6 +179,8 @@ export default {
     formSubmit() {
       // this.imgUpload()
       // this.videoUpload()
+      // setTimeout(() => {
+      console.log('alin', this.alintroduction, 'img', this.img, 'aid', this.aid, 'cid', this.cid, 'video', this.video)
       api({
         url: 'activitylog/addlog',
         method: 'post',
@@ -151,14 +193,14 @@ export default {
         }
       }).then(res => {
         console.log(res)
-        if (res.code === 20000){
+        if (res.code === 20000) {
           this.aid = ""
           this.img = []
           this.video = []
           this.alintroduction = ''
         }
       })
-      // console.log('alin', this.alintroduction, 'img',this.img, 'aid', this.aid, 'cid', this.cid, 'video',this.video)
+      // },1000)
     },
     imgUpload(e) {
       this.$refs.lFileimg.upload({
@@ -168,6 +210,7 @@ export default {
         name: 'img',
         // header: {'Authorization':'token'},
         //...其他参数
+        header: {"x-token": 'img'}
       });
       // this.$refs.upload.uploadFile(res => {
       //   if (res.code == 20000) {
@@ -184,13 +227,14 @@ export default {
     },
     videoUpload(e) {
       // console.log('video')
-      this.$refs.lFilevideo.upload({
+      this.$refs.lFileimg.upload({
         //非真实地址，记得更换,调试时ios有跨域，需要后端开启跨域并且接口地址不要使用http://localhost/
         url: 'http://127.0.0.1:3000/activitylog/logupload',
         //默认file,上传文件的key
         name: 'img',
         // header: {'Authorization':'token'},
         //...其他参数
+        header: {"x-token": 'file'}
       });
       // this.$refs.uploadvideo.uploadFile(res => {
       //   if (res.code == 20000) {
@@ -238,11 +282,27 @@ page {
 
 /*#ifdef MP-WEIXIN*/
 .main {
-  width: 750 rpx;
+  width: 750rpx;
 }
 
 .uni-list {
   //width: 750rpx;
+}
+
+.mybutton {
+  //color: red;
+  line-height: 2;
+  width: 400rpx;
+  margin-left: 0px;
+  font-size: 14px;
+  //border: 1px dashed #665959;
+  //font-size: 30px;
+  //font-weight: 200;
+  //background-color: #fcfcfc;
+}
+
+.uploadP {
+  font-size: 10px;
 }
 
 /*#endif*/
@@ -250,6 +310,18 @@ page {
 /*#ifdef H5*/
 .main {
   width: 80%;
+}
+
+.mybutton {
+  //color: red;
+  display: inline-block;
+  line-height: 5.5;
+  width: 15%;
+  margin-left: 0px;
+  border: 1px dashed #665959;
+  font-size: 30px;
+  font-weight: 200;
+  background-color: #fcfcfc;
 }
 
 /*#endif*/
@@ -268,7 +340,15 @@ page {
   font-weight: 600;
   /*width: 150px;*/
 }
-.mybutton{
-  color: red;
+
+.cname {
+  padding: 0px;
+  font-size: 14px;
+}
+
+::v-deep .uni-page-head-title {
+  color: black;
+  font-weight: 300;
+  font-size: 18px;
 }
 </style>

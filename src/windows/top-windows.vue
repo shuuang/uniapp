@@ -42,7 +42,7 @@ export default {
         tabBar: '/pages/tabBar/personal/index',
         index: '/pages/personal/index'
       }],
-      islogin: true,
+      islogin: false,
       usersname: '登录',
       token: ''
     }
@@ -73,9 +73,14 @@ export default {
       }
     },
   },
+  // created() {
+  //   if (uni.getStorageSync('token')){
+  //     this.islogin = true
+  //   }
+  // },
   mounted() {
-    uni.$on('usersnameChange', () => {
-      // this.islogin = change
+    uni.$on('usersnameChange', res => {
+      // this.islogin = res
       // console.log(this.islogin)
       this.usersInfo()
       // console.log(this.usersname)
@@ -115,11 +120,14 @@ export default {
       logout().then(res=>{
         // console.log('注销')
         if (res.code == 20000){
-          console.log('zhuxiao')
+          // console.log('zhuxiao')
           uni.removeStorageSync('token')
-          // uni.redirectTo({
-          //   url: ''
-          // })
+          // #ifdef H5
+          uni.reLaunch({
+            url: '/pages/index/index'
+          })
+          location.reload()
+          // #endif
           uni.$emit('usersnameChange', false)
         }
       })

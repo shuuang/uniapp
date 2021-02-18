@@ -2,15 +2,15 @@
   <view>
     <view class="uni-margin-wrap">
       <swiper class="swiper" circular :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-        <swiper-item>
-          <img src="/static/IMG_20200507_223611.jpg" width="100%">
+        <swiper-item v-for="item in imgList">
+          <img :src="'http://localhost:3000/' + item.aafile" width="100%">
         </swiper-item>
       </swiper>
     </view>
     <view class="example-body">
       <uni-grid :column="4" :highlight="true">
         <uni-grid-item style="height: 220px; width: 220px;margin: 15px" v-for="(item, index) in list" :index="index" :key="index" >
-          <view class="grid-item-box" :style="{backgroundImage: 'url(http://localhost:3000/'+item.appImage+')'}" @click="Detail(item.cid)">
+          <view class="grid-item-box" :style="{backgroundImage: 'url('+item.appImage+')'}" @click="Detail(item.cid)">
 <!--            <image :src="item.url" class="image" mode="aspectFill" style="vertical-align: middle"/>-->
             <text class="text">{{ item.cname }}</text>
           </view>
@@ -33,11 +33,13 @@ export default {
       autoplay: true,
       interval: 2000,
       duration: 500,
-      list: []
+      list: [],
+      imgList: []
     }
   },
   created() {
     this.getClubList()
+    this.getImg()
   },
   methods: {
     changeIndicatorDots(e) {
@@ -91,6 +93,21 @@ export default {
       //   }
       // })
       // uni.request结束
+    },
+    getImg(){
+      api({
+        url: 'activity/useractivitylist',
+        method: 'get',
+        params:{
+          astatus: 1
+        }
+      }).then(res=>{
+        console.log(res)
+        const list = res.data.filter(item => item.aafile = item.aafile.replace(/\\/g, '/')).reverse()
+        // console.log(list.slice(0,3))
+        this.imgList = list.slice(0,3)
+        console.log(this.imgList)
+      })
     },
     Detail(cid) {
       // console.log(cid)

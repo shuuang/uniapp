@@ -5,7 +5,7 @@
         <view class="uni-list-cell" hover-class="uni-list-cell-hover" @click="goDetail(value.aid)">
           <view class="uni-media-list">
             <!--            <image class="uni-media-list-logo" :src="value.cover"></image>-->
-            <image class="uni-media-list-logo" src="@/static/logo.png"></image>
+            <image class="uni-media-list-logo" :src="'http://localhost:3000/'+value.aafile"></image>
             <view class="uni-media-list-body">
               <view class="uni-media-list-text-top">{{ value.aName }}</view>
               <view class="uni-media-list-text-bottom">
@@ -43,7 +43,7 @@ export default {
         }
       }).then(res => {
             console.log(res.data)
-            this.listData = res.data
+            this.listData = res.data.filter(item => item.aafile = item.aafile.replace(/\\/g, '/'))
           })
     },
     goDetail(aid){

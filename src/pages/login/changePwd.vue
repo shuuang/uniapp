@@ -11,7 +11,7 @@
         </view>
         <view class="uni-form-item uni-column">
           <view class="title">新密码</view>
-          <input class="myinput" v-model="newpassword" placeholder="新密码">
+          <input type="password" class="myinput" v-model="newpassword" placeholder="新密码">
         </view>
       </form>
       <view class="uni-btn-v">
@@ -97,6 +97,9 @@ export default {
             this.$refs.popup.open()
             this.password = ''
             this.newpassword = ''
+          }
+          if (res.data.code === 50000) {
+
           }
         }
       })

@@ -1,17 +1,28 @@
 <template>
   <div class="main">
+<!--    #ifdef H5-->
     <page-head :title="log.alintroduction"></page-head>
+
     <view class="uni-center">
       <span class="info">记录社团：{{ log.club.cname }}</span>
       <span class="info">记录时间：{{ log.aldate }}</span>
     </view>
+<!--    #endif-->
+<!--    #ifdef MP-WEIXIN-->
+    <p style="font-size: 17px; font-weight: 500">{{log.alintroduction}}</p>
+    <view>
+      <span class="info">记录社团：{{ log.club.cname }}</span>
+      <span class="info">记录时间：{{ log.aldate }}</span>
+    </view>
+<!--    #endif-->
+
     <view class="uni-center" style="background:#FFFFFF; font-size:0;padding: 20px;">
       <view v-for="(item,index) in imgs">
-        <image class="image mycard" mode="widthFix" :src=item />
+        <image class="image mycard" mode="widthFix" :src="'http://localhost:3000/' + item " />
       </view>
       <view class="uni-padding-wrap uni-common-mt">
         <view v-for="item in videos">
-          <video class="mycard" id="myVideo" :src=item
+          <video class="mycard" id="myVideo" :src="'http://localhost:3000/' + item "
                  controls poster="@/static/association.png"></video>
         </view>
       </view>
@@ -26,7 +37,7 @@
             <button size="mini" type="default" plain="true" @click="handleComment">评论</button>
           </view>
         </uni-card>
-        <uni-card v-for="item in comments" :title="item.users.realname" :isFull="true" :extra="item.createAt" @click="clickCard">
+        <uni-card v-for="item in comments" :title="item.users.realname" :isFull="true" :extra="item.createAt">
           <text class="content-box-text">{{item.comment}}</text>
         </uni-card>
       </view>
@@ -37,7 +48,19 @@
 <script>
 import pageHead from '@/components/page-head/page-head'
 import api from "@/utils/requests";
-
+function FormmatTime(times) {
+  const time = new Date(times)
+  const y = time.getFullYear()
+  const mounth = time.getMonth()+1
+  const d = time.getDate()
+  const h = time.getHours();//12
+  const m = time.getMinutes(); //12
+  const s = time.getSeconds()
+  return `${y}--${addZero(mounth)}-${addZero(d)} ${addZero(h)}:${addZero(m)}:${addZero(s)}`
+}
+function addZero(v) {
+  return v < 10 ? '0' + v : v
+}
 export default {
   name: "index",
   components: {
@@ -71,6 +94,10 @@ export default {
     this.getComments()
   },
   methods: {
+    decadeTime:function (time) {
+      var date = new Date(time);
+      return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDay()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+    },
     getLog() {
       api({
         url: 'activitylog/searchlog',
@@ -103,10 +130,19 @@ export default {
           alid: this.alid
         }
       }).then(res => {
-        // console.log(res)
-        this.comments = res.data.reverse()
+        console.log(res)
+        this.comments = res.data.filter(item => {
+          item.createAt = this.decadeTime(item.createAt)
+        })
+        // this.comments = res.data.filter(item => {
+        //   item.createAt = item.createAt
+        // })
+        // this.comments = res.data
+        // console.log(list)
+        // this.comments = list
       })
     },
+
     handleComment(){
       // console.log(this.comment)
       api({
@@ -156,17 +192,16 @@ video{
 .mycard{
   width: 60%;
 }
+/deep/ .uni-page-head-title {
+  color: black;
+  /*font-weight: 500;*/
+  font-size: 18px;
+}
 /*#endif*/
 
 .main {
   /*width: 80%;*/
   margin: 0 auto;
-}
-
-/deep/ .uni-page-head-title {
-  color: black;
-  /*font-weight: 500;*/
-  font-size: 18px;
 }
 
 .info {
