@@ -37,11 +37,14 @@
             <button size="mini" type="default" plain="true" @click="handleComment">评论</button>
           </view>
         </uni-card>
-        <uni-card v-for="item in comments" :title="item.users.realname" :isFull="true" :extra="item.createAt">
+        <uni-card v-for="item in comments" :title="item.users.realname" :isFull="true" :extra="decadeTime(item.createAt)">
           <text class="content-box-text">{{item.comment}}</text>
         </uni-card>
       </view>
     </view>
+    <uni-popup id="popupMessage" ref="popupMessage" type="dialog">
+      <uni-popup-message type="error" :message="errorMsg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </div>
 </template>
 
@@ -78,7 +81,8 @@ export default {
       videos: [],
       alid: '',
       comments: [],
-      comment: ''
+      comment: '',
+      errorMsg: ''
     }
   },
   created() {
@@ -96,7 +100,7 @@ export default {
   methods: {
     decadeTime:function (time) {
       var date = new Date(time);
-      return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDay()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
+      return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()
     },
     getLog() {
       api({
@@ -131,13 +135,13 @@ export default {
         }
       }).then(res => {
         console.log(res)
-        this.comments = res.data.filter(item => {
-          item.createAt = this.decadeTime(item.createAt)
-        })
+        // this.comments = res.data.filter(item => {
+        //   item.createAt = this.decadeTime(item.createAt)
+        // })
         // this.comments = res.data.filter(item => {
         //   item.createAt = item.createAt
         // })
-        // this.comments = res.data
+        this.comments = res.data.reverse()
         // console.log(list)
         // this.comments = list
       })
@@ -157,6 +161,11 @@ export default {
         if (res.code==20000){
           this.getComments()
           this.comment = ''
+        }
+        if (res.code==50000){
+          this.$refs.popupMessage.open()
+          this.errorMsg = res.message
+          console.log(this.errorMsg)
         }
       })
     }

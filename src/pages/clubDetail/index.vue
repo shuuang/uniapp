@@ -39,7 +39,7 @@
           社团创建时间
         </view>
         <view class="uni-list-cell-db">
-          {{list.creatAt}}
+          {{list.createAt}}
         </view>
       </view>
       <view class="uni-list-cell">
@@ -128,6 +128,7 @@ export default {
             console.log(res.data.data);
             this.list = res.data.data
             this.list.appImage = res.data.data.appImage.replace(/\\/g, '/')
+            this.list.createAt = res.data.data.createAt.replace(/\//g, '-')
             // console.log(this.list)
             // var test = res.data.data[1].appImage
             // console.log(test)
