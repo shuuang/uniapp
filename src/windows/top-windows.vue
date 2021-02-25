@@ -145,8 +145,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  border-bottom: 1px solid #e1e1e1;
-  background-color: #FFFFFF;
+  /*border-bottom: 1px solid #e1e1e1;*/
+  /*background-color: rgba(255,255,255,0.4);*/
+  background-color: #ffffff;
   color: #333;
 }
 .logo {
@@ -180,6 +181,9 @@ export default {
 .tab-bar-flex {
   width: 360px;
 }
+/*/deep/ .uni-top-window uni-tabbar .uni-tabbar{*/
+/*  background-color: rgba(255,255,255,0.4) !important;*/
+/*}*/
 .phone-link {
   padding-left: 20px;
   cursor: pointer;

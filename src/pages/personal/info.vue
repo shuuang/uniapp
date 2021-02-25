@@ -103,7 +103,16 @@ export default {
   name: "info",
   data() {
     return {
-      formData: {},
+      formData: {
+        email: "xxxx@xx.com",
+        wechat: "xxxxxxxxxx",
+        qq: "xxxxxxxxxx",
+        phone: "1xxxxxxxxxx",
+        home: "大连东软信息学院",
+        birthday: "",
+        uclass: "",
+        nation: "汉族"
+      },
       startDate: getDate('start'),
       endDate: getDate('end'),
       genderText: '',
@@ -117,7 +126,7 @@ export default {
           name: '女',
         }
       ],
-      current: 1
+      current: 0
     }
   },
   created() {
@@ -188,6 +197,9 @@ export default {
         success: result => {
           if (result.data.code == 20000) {
             this.flag = false
+            // #ifdef H5
+            location.reload()
+            // #endif
           }
         }
       })

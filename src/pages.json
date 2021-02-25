@@ -14,22 +14,10 @@
     }
   },
   "pages": [
-    //		nvue
+    //	nvue
     {
-      //首页
+      // 首页
       "path": "pages/tabBar/index/index"
-    },
-    {
-      // 测试页1
-      "path": "pages/tabBar/test1/index"
-    },
-    {
-      // 测试页2
-      "path": "pages/tabBar/test2/index"
-    },
-    {
-      // 测试页3
-      "path": "pages/tabBar/test3/index"
     },
     {
       "path": "pages/tabBar/activity/activity",
@@ -44,18 +32,6 @@
       }
     },
     //		vue
-    {
-      //测试页1
-      "path": "pages/test1/index"
-    },
-    {
-      //测试页2
-      "path": "pages/test2/index"
-    },
-    {
-      // 测试页3
-      "path": "pages/test3/index"
-    },
     {
       //首页
       "path": "pages/index/index"
@@ -96,9 +72,6 @@
       "style": {
         "navigationBarTitleText": "活动记录"
       }
-    },
-    {
-      "path": "pages/login/notlogin"
     },
     {
       "path": "pages/login/changePwd",
@@ -145,10 +118,10 @@
     }
   },
   "tabBar": {
-    "color": "#7A7E83",
+    "color": "#000000",
     "selectedColor": "#007AFF",
     "borderStyle": "black",
-    "backgroundColor": "#F8F8F8",
+    "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/tabBar/index/index",

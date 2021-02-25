@@ -8,14 +8,14 @@
     </view>
     <view class="list">
       <uni-section title="已加入社团" type="line"></uni-section>
-      <uni-list-item clickable @click="editLog(item.cid,item.club.cname)" v-for="item in club" showArrow :title="item.club.cname" rightText="右侧文字"/>
+      <uni-list-item clickable @click="editLog(item.cid,item.club.cname)" v-for="item in club" showArrow :title="item.club.cname"/>
     </view>
     <view class="list">
-      <uni-list-item clickable @click="applyClub" showArrow title="申请创建社团" rightText="右侧文字"/>
-      <uni-list-item clickable @click="changepwd" showArrow title="修改密码" rightText="右侧文字"/>
+      <uni-list-item clickable @click="applyClub" showArrow title="申请创建社团"/>
+      <uni-list-item clickable @click="changepwd" showArrow title="修改密码"/>
     </view>
     <view class="list">
-      <uni-list-item clickable @click="logout" showArrow title="注销登录" rightText="右侧文字"/>
+      <uni-list-item clickable @click="logout" showArrow title="注销登录"/>
     </view>
   </div>
 </template>

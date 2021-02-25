@@ -3,10 +3,11 @@
 <!--    <view class="uni-title uni-common-pl">普通选择器</view>-->
     <view class="uni-list">
       <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          社团名称
-        </view>
+<!--        <view class="uni-list-cell-left">-->
+<!--          社团名称-->
+<!--        </view>-->
         <view class="uni-list-cell-db">
+          <span style="font-weight: 800">社团名称： </span>
           {{ list.cname }}
         </view>
       </view>
@@ -63,13 +64,22 @@
     <uni-popup id="popupDialog" ref="popupDialog" type="dialog">
       <uni-popup-dialog type="info" title="通知" content="确认报名此社团？" :before-close="true" @confirm="dialogConfirm" @close="dialogClose"></uni-popup-dialog>
     </uni-popup>
+    <uni-popup id="popupMessage" ref="popupMessage" type="dialog">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </div>
 </template>
 
 <script>
 import api from '@/utils/requests.js'
+import uniPopupDialog from '@/components/uni-popup-dialog/uni-popup-dialog.vue'
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message.vue'
 export default {
   name: "index",
+  components:{
+    uniPopupDialog,
+    uniPopupMessage
+  },
   data(){
     return {
       cid:'',
@@ -78,7 +88,9 @@ export default {
 
         }
       },
-      activityLog: []
+      activityLog: [],
+      msg: '',
+      type: ''
     }
   },
   created() {
@@ -164,6 +176,12 @@ export default {
         // console.log(res)
         if (res.code == 20000){
           this.$refs.popupDialog.close()
+        }
+        if (res.code == 50000) {
+          this.$refs.popupMessage.open()
+          this.$refs.popupDialog.close()
+          this.type = 'error'
+          this.msg = res.message
         }
       })
     },

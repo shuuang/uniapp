@@ -40,7 +40,13 @@
               </view>
               <view class="uni-form-item uni-column">
                 <view class="title">出生日期</view>
-                <input class="uni-input" v-model="birthday" placeholder="出生日期">
+<!--                <input class="uni-input" v-model="birthday" placeholder="出生日期">-->
+                <view class="uni-list-cell-db">
+                  <picker mode="date" :value="birthday" :start="startDate" :end="endDate" @change="bindDateChange">
+                    <uni-easyinput v-model="birthday" placeholder="请输入出生日期"> {{ birthday }}
+                    </uni-easyinput>
+                  </picker>
+                </view>
               </view>
               <view class="uni-form-item uni-column">
                 <view class="title">班级</view>
@@ -71,6 +77,9 @@
             <button v-show="flag==false" class="mybutton" plain="true" @click="register">注册</button>
           </view>
     </div>
+    <uni-popup id="popupMessage" ref="popupMessage" type="dialog">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </div>
 </template>
 
@@ -78,12 +87,31 @@
 import Index from "@/pages/index/index";
 import api from '@/utils/requests.js'
 import {getInfo} from "@/api/user";
+function getDate(type) {
+  const date = new Date();
 
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+
+  if (type === 'start') {
+    year = year - 30;
+  } else if (type === 'end') {
+    year = year;
+  }
+  month = month > 9 ? month : '0' + month;
+  ;
+  day = day > 9 ? day : '0' + day;
+
+  return `${year}-${month}-${day}`;
+}
 export default {
   name: "login",
   components: {Index},
   data() {
     return {
+      startDate: getDate('start'),
+      endDate: getDate('end'),
       username: '',
       password: '',
       realname: '',
@@ -108,7 +136,9 @@ export default {
           name: '女'
         }
       ],
-      current: 0
+      current: 0,
+      msg: '',
+      type: ''
     }
   },
   methods: {
@@ -121,6 +151,12 @@ export default {
           password: this.password
         }
       }).then(res => {
+        // console.log(res)
+        if (res.code == 50000) {
+          this.$refs.popupMessage.open()
+          this.type = 'error'
+          this.msg = res.message
+        }
         uni.setStorage({
           key: 'token',
           data: res.data.token,
@@ -189,18 +225,26 @@ export default {
       }).then(res => {
         // console.log(res)
         if (res.code === 20000) {
-          this.username = '',
-              this.password = '',
-              this.realname = '',
-              this.email = '',
-              this.wechat = '',
-              this.qq = '',
-              this.phone = '',
-              this.home = '',
-              this.birthday = '',
-              this.classes = '',
-              this.nation = '',
-              this.gender = ''
+          this.username = ''
+          this.password = ''
+          this.realname = ''
+          this.email = ''
+          this.wechat = ''
+          this.qq = ''
+          this.phone = ''
+          this.home = ''
+          this.birthday = ''
+          this.classes = ''
+          this.nation = ''
+          this.gender = ''
+          this.$refs.popupMessage.open()
+          this.msg = res.message
+          this.type = 'seccess'
+        }
+        if (res.code === 50000) {
+          this.$refs.popupMessage.open()
+          this.type = 'error'
+          this.msg = res.message
         }
       })
     },
@@ -223,6 +267,10 @@ export default {
       //     break;
       //   }
       // }
+    },
+    bindDateChange: function (e) {
+      // console.log(e)
+      this.birthday = e.detail.value
     }
   }
 }
@@ -267,8 +315,8 @@ export default {
 /*#endif*/
 
 .uni-input {
-  border: 1px solid #a2a2a2;
-  border-radius: 5px;
+  border: 1px solid #c8c7cc;
+  border-radius: 4px;
 }
 
 .mybutton {

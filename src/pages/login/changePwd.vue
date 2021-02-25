@@ -97,6 +97,10 @@ export default {
             this.$refs.popup.open()
             this.password = ''
             this.newpassword = ''
+            uni.reLaunch({
+              url: '/pages/login/login'
+            })
+            location.reload()
           }
           if (res.data.code === 50000) {
 
@@ -111,7 +115,7 @@ export default {
 <style scoped>
 /*#ifdef MP-WEIXIN*/
 .main {
-  width: 750 rpx;
+  width: 750rpx;
 }
 .mycard{
   background-color: rgba(0,0,0,0);
