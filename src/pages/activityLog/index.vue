@@ -42,8 +42,8 @@
         </uni-card>
       </view>
     </view>
-    <uni-popup id="popupMessage" ref="popupMessage" type="dialog">
-      <uni-popup-message type="error" :message="errorMsg" :duration="2000"></uni-popup-message>
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
+      <uni-popup-message :type="type" :message="errorMsg" :duration="2000"></uni-popup-message>
     </uni-popup>
   </div>
 </template>
@@ -51,6 +51,7 @@
 <script>
 import pageHead from '@/components/page-head/page-head'
 import api from "@/utils/requests";
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 function FormmatTime(times) {
   const time = new Date(times)
   const y = time.getFullYear()
@@ -67,7 +68,8 @@ function addZero(v) {
 export default {
   name: "index",
   components: {
-    pageHead
+    pageHead,
+    uniPopupMessage
   },
   data() {
     return {
@@ -82,7 +84,8 @@ export default {
       alid: '',
       comments: [],
       comment: '',
-      errorMsg: ''
+      errorMsg: '',
+      type: ''
     }
   },
   created() {
@@ -161,11 +164,14 @@ export default {
         if (res.code==20000){
           this.getComments()
           this.comment = ''
+          this.errorMsg = res.message
+          this.type = "success"
+          this.$refs.popupMessage.open()
         }
         if (res.code==50000){
-          this.$refs.popupMessage.open()
           this.errorMsg = res.message
-          console.log(this.errorMsg)
+          this.type = "error"
+          this.$refs.popupMessage.open()
         }
       })
     }
@@ -176,7 +182,7 @@ export default {
 <style scoped>
 /*#ifdef MP-WEIXIN*/
 .main {
-  width: 750 rpx;
+  width: 750rpx;
 }
 .info{
   font-size: 10px;

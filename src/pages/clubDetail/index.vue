@@ -1,57 +1,35 @@
 <template>
   <div class="main">
-<!--    <view class="uni-title uni-common-pl">普通选择器</view>-->
-    <view class="uni-list">
-      <view class="uni-list-cell">
-<!--        <view class="uni-list-cell-left">-->
-<!--          社团名称-->
-<!--        </view>-->
-        <view class="uni-list-cell-db">
-          <span style="font-weight: 800">社团名称： </span>
-          {{ list.cname }}
-        </view>
+<!--    #ifdef MP-WEIXIN-->
+    <view class="wxflex">
+      <view class="flex-item right">
+        <p style="font-size: 20px;font-weight: 500">{{ list.cname }}</p>
+        <p class="right-font"><uni-icons type="person" color="#989898" size="17"></uni-icons>指导教师：{{ list.teacher}}</p>
+        <p class="right-font"><uni-icons type="contact" color="#989898" size="17"></uni-icons>社团社长：{{ list.users.realname }}</p>
+        <p class="right-font"><uni-icons type="circle" color="#989898" size="17"></uni-icons>社团创建时间：{{ list.createAt }}</p>
+        <p class="right-font"><uni-icons type="info" color="#989898" size="17"></uni-icons>社团简介{{ list.introduction }}</p>
       </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          社长
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.users.realname}}
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          指导教师
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.teacher}}
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          社团图片
-        </view>
-        <view class="uni-list-cell-db">
-          <image class="myimg" :src="list.appImage"></image>
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          社团创建时间
-        </view>
-        <view class="uni-list-cell-db">
-          {{list.createAt}}
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          社团简介
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.introduction}}
-        </view>
+      <view>
+        <image :src="list.appImage"></image>
       </view>
     </view>
+<!--    #endif-->
+<!--    #ifdef H5-->
+    <view class="uni-flex uni-row">
+      <view class="flex-item left">
+        <img class="myimg" :src="list.appImage"></img>
+      </view>
+      <view class="flex-item right">
+        <p style="font-size: 20px;font-weight: 500">{{ list.cname }}</p>
+        <p class="right-font"><uni-icons type="person" color="#989898" size="17"></uni-icons>指导教师：{{ list.teacher}}</p>
+        <p class="right-font"><uni-icons type="contact" color="#989898" size="17"></uni-icons>社团社长：{{ list.users.realname }}</p>
+        <p class="right-font"><uni-icons type="circle" color="#989898" size="17"></uni-icons>社团创建时间：{{ list.createAt }}</p>
+        <p class="right-font"><uni-icons type="info" color="#989898" size="17"></uni-icons>社团简介{{ list.introduction }}</p>
+      </view>
+    </view>
+    <uni-section title="社团人数增长" type="line"></uni-section>
+    <echarts :charts = "charts"></echarts>
+<!--    #endif-->
     <button type="default" @click="sign">报名社团</button>
     <uni-section title="活动相关社团记录" type="line"></uni-section>
     <view class="example-body">
@@ -74,9 +52,12 @@
 import api from '@/utils/requests.js'
 import uniPopupDialog from '@/components/uni-popup-dialog/uni-popup-dialog.vue'
 import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message.vue'
+import echarts from '@/pages/echarts/index'
+
 export default {
   name: "index",
   components:{
+    echarts,
     uniPopupDialog,
     uniPopupMessage
   },
@@ -90,7 +71,11 @@ export default {
       },
       activityLog: [],
       msg: '',
-      type: ''
+      type: '',
+      charts: {
+        xAxis: [],
+        yAxis: []
+      }
     }
   },
   created() {
@@ -112,6 +97,7 @@ export default {
     // #endif
     console.log(this.cid)
     this.getDetail()
+    this.getMember()
   },
   methods: {
     // onLoad(option){
@@ -127,7 +113,7 @@ export default {
           cid: this.cid
         }
       }).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.activityLog = res.data
       })
         uni.request({
@@ -137,7 +123,7 @@ export default {
             cid: this.cid
           },
           success: (res) => {
-            console.log(res.data.data);
+            // console.log(res.data.data);
             this.list = res.data.data
             this.list.appImage = res.data.data.appImage.replace(/\\/g, '/')
             this.list.createAt = res.data.data.createAt.replace(/\//g, '-')
@@ -189,6 +175,19 @@ export default {
       // 取消
       this.$refs.popupDialog.close()
       // done()
+    },
+    getMember() {
+      api({
+        url: 'clubmember/eaddnum',
+        method: 'post',
+        data:{
+          cid: this.cid
+        }
+      }).then(res => {
+        // console.log(res)
+        this.charts.xAxis = res.xAxis
+        this.charts.yAxis = res.yAxis
+      })
     }
   }
 }
@@ -200,12 +199,37 @@ export default {
   width: 750rpx;
 }
 .myimg{
-  width: 550rpx;
-  height: 550rpx;
+  /*width: 750rpx;*/
+  /*height: 550rpx;*/
 }
 button{
   font-size: 13px;
 }
+image{
+  width: 750rpx;
+  height: 750rpx;
+}
+.left{
+  padding: 10px 0px;
+  width: 750rpx;
+  height: 750rpx;
+}
+
+.right{
+  padding: 10px 10px;
+}
+.wxflex{
+  display: flex;
+  flex-direction: column;
+}
+.right-font{
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #989898;
+}
+/*.flex-item {*/
+/*  width: 30rpx;*/
+/*}*/
 /*#endif*/
 
 /*#ifdef H5*/
@@ -214,6 +238,29 @@ button{
 }
 button{
   font-size: 15px;
+}
+.myimg{
+  width: 100%;
+}
+
+.left{
+  padding: 30px 0px;
+  width: 30%;
+}
+
+.right{
+  padding: 30px 30px;
+  display: flex;
+  flex-direction: column;
+}
+.right-font{
+  font-size: 14px;
+  font-weight: 500;
+  color: #989898;
+}
+
+.flex-item {
+
 }
 /*#endif*/
 
@@ -237,4 +284,5 @@ button{
 /deep/ .uni-border:after{
   border-radius: 0px;
 }
+
 </style>

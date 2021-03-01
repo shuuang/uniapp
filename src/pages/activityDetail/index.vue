@@ -1,48 +1,19 @@
 <template>
   <div class="main">
-    <view class="uni-list">
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          活动名称
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.aName }}
-        </view>
+    <view>
+      <p class="aName">{{ list.aName }}</p>
+      <view class="activityInfo">
+        <text class="info">承办单位{{ list.club.cname }}</text>
+        <text class="info">活动时间：{{ list.startDate }}——{{ list.endDate }}</text>
+        <text class="info">举办地点：{{ list.location }}</text>
       </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          时间
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.startDate }}——{{ list.endDate }}
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          活动地点
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.location }}
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          活动简介
-        </view>
-        <view class="uni-list-cell-db">
-          {{ list.club.cname }}
-        </view>
-      </view>
-      <view class="uni-list-cell">
-        <view class="uni-list-cell-left">
-          相关文件
-        </view>
-        <view class="uni-list-cell-db">
-<!--          {{ list.aafile }}-->
-          <image :src="list.aafile"></image>
-        </view>
-      </view>
+      <p class="aComment">{{ list.aIntroduction }}</p>
+      <image mode="widthFix" :src="list.aafile" style="width: 100%"></image>
     </view>
+    <!-- #ifdef H5 -->
+    <uni-section title="活动记录数量" type="line"></uni-section>
+    <echarts></echarts>
+<!--    #endif-->
     <uni-section title="活动相关社团记录" type="line"></uni-section>
     <view class="example-body">
       <uni-card v-for="item in activityLog" @click="logDetail(item.alid)">
@@ -56,10 +27,13 @@
 
 <script>
 import api from '@/utils/requests.js'
+import echarts from '@/pages/echarts/index'
 
 export default {
   name: "index",
-  options: { styleIsolation: 'apply-shared' },
+  components:{
+    echarts
+  },
   data() {
     return {
       aid: '',
@@ -92,6 +66,21 @@ export default {
     this.getActivityLog()
   },
   methods: {
+    lineInit(e) {
+      let {
+        width,
+        height
+      } = e;
+      let canvas = this.$refs.lineChart.canvas
+      echarts.setCanvasCreator(() => canvas);
+      let lineChart = echarts.init(canvas, null, {
+        width: width,
+        height: height
+      })
+      canvas.setChart(lineChart)
+      lineChart.setOption(this.line)
+      this.$refs.lineChart.setChart(lineChart)
+    },
     getDetail() {
       uni.request({
         url: 'http://localhost:3000/activity/userdetailactivity',
@@ -142,14 +131,38 @@ image{
   width: 550rpx;
   height: 550rpx;
 }
+.activityInfo{
+  font-size: 30rpx;
+  display: flex;
+  flex-direction: column;
+  color: #c8c7cc;
+}
+.aComment{
+  padding: 10px;
+  border-top: 1px solid
+}
 /*#endif*/
 
 /*#ifdef H5*/
 .main {
   width: 80%;
 }
-
+.info{
+  font-size: 13px;
+  color: #c8c7cc;
+  margin-right: 30px;
+}
+.aComment{
+  padding: 30px;
+  border-top: 1px solid
+}
 /*#endif*/
+
+.aName{
+  padding-top: 10px;
+  font-weight: 800;
+  font-size: 20px;
+}
 
 .main {
   /*width: 80%;*/

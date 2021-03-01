@@ -31,7 +31,7 @@
             </view>
             <text v-show="flag == false"> {{ formData.birthday }}</text>
           </uni-forms-item>
-          <uni-forms-item required name="sex" label="性别">
+          <uni-forms-item  name="sex" label="性别">
             <radio-group v-show="flag == true" @change="radioChange">
               <label v-for="(item, index) in items" :key="item.value">
                 <radio :value="item.value" :checked="index === current "
@@ -41,32 +41,32 @@
             </radio-group>
             <text v-show="flag == false"> {{ genderText }}</text>
           </uni-forms-item>
-          <uni-forms-item name="home" required label="住址">
+          <uni-forms-item name="home"  label="住址">
             <uni-easyinput v-show="flag == true" type="text" :inputBorder="true" v-model="formData.home"
                            placeholder="请输入住址"></uni-easyinput>
             <text v-show="flag == false"> {{ formData.home }}</text>
           </uni-forms-item>
-          <uni-forms-item name="nation" required label="民族">
+          <uni-forms-item name="nation"  label="民族">
             <uni-easyinput v-show="flag == true" type="text" :inputBorder="true" v-model="formData.nation"
                            placeholder="请输入民族"></uni-easyinput>
             <text v-show="flag == false"> {{ formData.nation }}</text>
           </uni-forms-item>
-          <uni-forms-item name="email" required label="邮箱">
+          <uni-forms-item name="email"  label="邮箱">
             <uni-easyinput v-show="flag == true" type="text" :inputBorder="true" v-model="formData.email"
                            placeholder="请输入邮箱"></uni-easyinput>
             <text v-show="flag == false"> {{ formData.email }}</text>
           </uni-forms-item>
-          <uni-forms-item name="qq" required label="QQ">
+          <uni-forms-item name="qq"  label="QQ">
             <uni-easyinput v-show="flag == true" type="text" :inputBorder="true" v-model="formData.qq"
                            placeholder="请输入QQ"></uni-easyinput>
             <text v-show="flag == false"> {{ formData.qq }}</text>
           </uni-forms-item>
-          <uni-forms-item name="wechat" required label="微信">
+          <uni-forms-item name="wechat"  label="微信">
             <uni-easyinput v-show="flag == true" type="text" :inputBorder="true" v-model="formData.wechat"
                            placeholder="请输入微信"></uni-easyinput>
             <text v-show="flag == false"> {{ formData.wechat }}</text>
           </uni-forms-item>
-          <uni-forms-item name="phone" required label="手机号">
+          <uni-forms-item name="phone" label="手机号">
             <uni-easyinput v-show="flag == true" type="text" :inputBorder="true" v-model="formData.phone"
                            placeholder="请输入手机号"></uni-easyinput>
             <text v-show="flag == false"> {{ formData.phone }}</text>
@@ -74,11 +74,15 @@
         </uni-group>
       </uni-forms>
     </view>
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </div>
 </template>
 
 <script>
 import api from "@/utils/requests";
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 
 function getDate(type) {
   const date = new Date();
@@ -101,6 +105,9 @@ function getDate(type) {
 
 export default {
   name: "info",
+  components: {
+    uniPopupMessage
+  },
   data() {
     return {
       formData: {
@@ -126,7 +133,9 @@ export default {
           name: '女',
         }
       ],
-      current: 0
+      current: 0,
+      msg: '',
+      type: ''
     }
   },
   created() {
@@ -195,11 +204,25 @@ export default {
           gender: this.formData.gender
         },
         success: result => {
+          console.log(result)
           if (result.data.code == 20000) {
             this.flag = false
             // #ifdef H5
-            location.reload()
+            // location.reload()
             // #endif
+            // #ifdef H5
+            // uni.reLaunch({
+            //   url: 'pages/personal/info'
+            // });
+            // #endif
+            this.msg = result.data.message
+            this.type = "success"
+            this.$refs.popupMessage.open()
+          }
+          if (result.data.code == 50000) {
+            this.msg = result.data.message
+            this.type = "error"
+            this.$refs.popupMessage.open()
           }
         }
       })

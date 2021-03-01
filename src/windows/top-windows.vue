@@ -14,12 +14,16 @@
 <!--    <span v-show="islogin==false" @click="login">{{ usersname }}</span>-->
     <button class="mybutton" size="mini" @click="login">{{ usersname }}</button>
     <button class="mybutton" size="mini" @click="logout">注销</button>
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </view>
 </template>
 
 <script>
 import api from "@/utils/requests";
 import {logout} from "@/api/user";
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 
 export default {
   data() {
@@ -44,7 +48,9 @@ export default {
       }],
       islogin: false,
       usersname: '登录',
-      token: ''
+      token: '',
+      msg:'',
+      type:''
     }
   },
   props: {
@@ -129,6 +135,9 @@ export default {
           location.reload()
           // #endif
           uni.$emit('usersnameChange', false)
+          this.msg = res.message
+          this.type = "success"
+          this.$refs.popupMessage.open()
         }
       })
     }

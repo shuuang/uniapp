@@ -3,7 +3,7 @@
     <view class="uni-margin-wrap">
       <swiper class="swiper" circular :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
         <swiper-item v-for="item in imgList">
-          <img :src="'http://localhost:3000/' + item.aafile" width="100%">
+          <image class="swiper-image" mode="widthFix" :src="'http://localhost:3000/' + item.aafile" width="100%"></image>
         </swiper-item>
       </swiper>
     </view>
@@ -74,6 +74,7 @@ export default {
       api.post('club/userclublist',{appStatus: 1})
           .then(res => {
         this.list = res.data.filter(item => item.appImage = item.appImage.replace(/\\/g, '/'))
+            console.log(this.list)
       })
       //uni.request开始
       // uni.request({
@@ -102,11 +103,11 @@ export default {
           astatus: 1
         }
       }).then(res=>{
-        console.log(res)
+        // console.log(res)
         const list = res.data.filter(item => item.aafile = item.aafile.replace(/\\/g, '/')).reverse()
         // console.log(list.slice(0,3))
         this.imgList = list.slice(0,3)
-        console.log(this.imgList)
+        // console.log(this.imgList)
       })
     },
     Detail(cid) {
@@ -149,6 +150,17 @@ export default {
   height: 300rpx;
   height: 400px;
 }
+
+.text{
+  background-color: rgba(0, 0, 0, 0.1);
+  /*box-shadow: 0px 2px 3px 0px black;*/
+  /*padding: 0px 18px;*/
+  color: #ffffff !important;
+  line-height: 11;
+  width: 100%;
+  text-align: center;
+}
+
 .swiper-item {
   display: block;
   height: 300rpx;
@@ -323,5 +335,24 @@ view {
 }
 /deep/ .uni-grid-item--border{
   border: none;
+}
+
+.uni-margin-wrap {
+
+  height:100%;
+  margin:0 0upx;
+}
+.swiper {
+  height: 680upx;
+}
+.swiper-item {
+  display: block;
+  /*line-height: 550upx;*/
+  text-align: center;
+}
+/*图片宽度设置100% ，高度300upx（设为auto图片无法显示）*/
+.swiper-image{
+  width:100%;
+  /*height:550upx;*/
 }
 </style>

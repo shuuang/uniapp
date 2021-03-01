@@ -94,6 +94,9 @@
         <button class="mybutton" plain="true" @click="submitApply">提交申请</button>
       </view>
     </div>
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </div>
 </template>
 
@@ -102,13 +105,15 @@ import PageHead from "@/components/page-head/page-head";
 import uploadFile from '@/components/upload'
 import api from "@/utils/requests";
 import lfile from '@/components/l-file'
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 
 export default {
   name: "applyClub",
   components: {
     PageHead,
     uploadFile,
-    lfile
+    lfile,
+    uniPopupMessage
   },
   data() {
     return {
@@ -118,7 +123,9 @@ export default {
       appImage: '',
       img: '',
       file: '',
-      duty: ''
+      duty: '',
+      type: '',
+      msg: ''
     }
   },
   // updated() {
@@ -150,6 +157,9 @@ export default {
           this.img = ''
           this.file = ''
           this.duty = ''
+          this.msg = "已提交创建社团申请"
+          this.type = "success"
+          this.$refs.popupMessage.open()
         }
       })
     },

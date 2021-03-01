@@ -100,6 +100,9 @@
       </view>
     </view>
     <button @click="formSubmit">提交</button>
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
+    </uni-popup>
   </div>
 </template>
 
@@ -108,12 +111,14 @@ import PageHead from "@/components/page-head/page-head";
 import uploadFile from '@/components/upload'
 import api from "@/utils/requests";
 import lfile from '@/components/l-file'
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 
 export default {
   name: "editLog",
   components: {
     uploadFile,
-    lfile
+    lfile,
+    uniPopupMessage
   },
   onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
     // console.log(option); //打印出上个页面传递的参数。
@@ -131,7 +136,9 @@ export default {
       array: [{
         aName: ''
       }],
-      index: 0
+      index: 0,
+      msg: '',
+      type: ''
     }
   },
   created() {
@@ -192,12 +199,15 @@ export default {
           cid: this.cid
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.code === 20000) {
           this.aid = ""
           this.img = []
           this.video = []
           this.alintroduction = ''
+          this.msg = res.message
+          this.type = "success"
+          this.$refs.popupMessage.open()
         }
       })
       // },1000)

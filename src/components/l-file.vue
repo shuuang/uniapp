@@ -56,7 +56,7 @@ export default {
 
 		  	// 上传附件 获取文件信息
 		  	this.fileinfo = event.target.files;
-		  	console.log("文件信息", this.fileinfo);
+		  	// console.log("文件信息", this.fileinfo);
 		  	//this.upload();
 		  	 this.hRequest(this.hParam)
 		  }
@@ -172,11 +172,11 @@ export default {
 
 
 			let createUpload = (file, url, key=name, header = {},data = {}) => {
-				console.log(`
-				上传地址:${url}\n
-				请求头:${JSON.stringify(header)}\n
-				参数:${JSON.stringify(data)}
-				`);
+				// console.log(`
+				// 上传地址:${url}\n
+				// 请求头:${JSON.stringify(header)}\n
+				// 参数:${JSON.stringify(data)}
+				// `);
 				if (!url) {return;}
 				//tis.style.display = 'flex';
 

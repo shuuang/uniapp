@@ -76,8 +76,13 @@
             <button v-show="flag==false" class="mybutton" plain="true" @click="goLogin">已有账号，直接登录</button>
             <button v-show="flag==false" class="mybutton" plain="true" @click="register">注册</button>
           </view>
+      <!--            #ifdef MP-WEIXIN-->
+          <button v-show="flag==true" style="line-height: 1.4" plain="true" @click="wxLogin">
+            <uni-icons type="weixin" size="20"></uni-icons>
+          </button>
+      <!--            #endif-->
     </div>
-    <uni-popup id="popupMessage" ref="popupMessage" type="dialog">
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
       <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
     </uni-popup>
   </div>
@@ -86,6 +91,7 @@
 <script>
 import Index from "@/pages/index/index";
 import api from '@/utils/requests.js'
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 import {getInfo} from "@/api/user";
 function getDate(type) {
   const date = new Date();
@@ -107,7 +113,9 @@ function getDate(type) {
 }
 export default {
   name: "login",
-  components: {Index},
+  components: {
+    uniPopupMessage
+  },
   data() {
     return {
       startDate: getDate('start'),
@@ -155,6 +163,11 @@ export default {
         if (res.code == 50000) {
           this.$refs.popupMessage.open()
           this.type = 'error'
+          this.msg = res.message
+        }
+        if (res.code == 20000) {
+          this.$refs.popupMessage.open()
+          this.type = 'success'
           this.msg = res.message
         }
         uni.setStorage({
@@ -271,6 +284,39 @@ export default {
     bindDateChange: function (e) {
       // console.log(e)
       this.birthday = e.detail.value
+    },
+    wxLogin() {
+      // console.log('微信登录')
+      wx.login({
+        success (res) {
+          // console.log(res)
+          if (res.code) {
+            uni.request({
+              url: 'http://localhost:3000/users/wechat', //仅为示例，并非真实接口地址。
+              method: 'post',
+              data: {
+                code: res.code
+              },
+              // header: {
+              //   'X-Token': uni.getStorageSync('token')
+              // },
+              success: (result) => {
+                console.log(result.data);
+                wx.getUserInfo({
+                  success:function (ress) {
+                    console.log(ress)
+                  },
+                  fail:function(){
+                    console.log("启用app.getUserInfo函数，失败！");
+                  },
+                })
+              }
+            });
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
     }
   }
 }

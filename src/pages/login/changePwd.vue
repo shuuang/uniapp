@@ -7,7 +7,7 @@
       <form>
         <view class="uni-form-item uni-column">
           <view class="title">旧密码</view>
-          <input class="myinput" v-model="password" placeholder="旧密码">
+          <input type="password" class="myinput" v-model="password" placeholder="旧密码">
         </view>
         <view class="uni-form-item uni-column">
           <view class="title">新密码</view>
@@ -37,21 +37,27 @@
 <!--        </uni-card>-->
 <!--      </view>-->
 <!--    </view>-->
-    <uni-popup ref="popup" type="message">
-      <uni-popup-message type="success" message="成功消息" :duration="2000"></uni-popup-message>
+    <uni-popup id="popupMessage" ref="popupMessage" type="message">
+      <uni-popup-message :type="type" :message="msg" :duration="2000"></uni-popup-message>
     </uni-popup>
   </div>
 </template>
 
 <script>
 import api from '@/utils/requests.js'
+import uniPopupMessage from '@/components/uni-popup-message/uni-popup-message'
 
 export default {
   name: "changePwd",
+  components: {
+    uniPopupMessage
+  },
   data() {
     return {
       password: '',
-      newpassword: ''
+      newpassword: '',
+      msg: '',
+      type: ''
     }
   },
   methods: {
@@ -91,19 +97,32 @@ export default {
           newpassword: this.newpassword
         },
         success: res => {
-          console.log(res)
+          // console.log(res)
           console.log(2)
           if (res.data.code == 20000) {
-            this.$refs.popup.open()
+            this.msg = res.data.message
+            this.type = "success"
+            this.$refs.popupMessage.open()
             this.password = ''
             this.newpassword = ''
-            uni.reLaunch({
-              url: '/pages/login/login'
+            uni.removeStorageSync('token')
+            // #ifdef H5
+            location.reload()
+            uni.navigateTo({
+              url: '/pages/index/index'
             })
+            // #endif
+            // #ifdef MP-WEIXIN
+            uni.reLaunch({
+              url: '/pages/tabBar/index/index'
+            });
+            // #endif
             location.reload()
           }
           if (res.data.code === 50000) {
-
+            this.msg = res.data.message
+            this.type = "error"
+            this.$refs.popupMessage.open()
           }
         }
       })

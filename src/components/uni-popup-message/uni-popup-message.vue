@@ -74,7 +74,6 @@
 		padding: 10px 30px;
 		border-style: solid;
 		border-width: 1px;
-    border-radius: 4px;
 	}
 
 	.uni-popup-message-text {
