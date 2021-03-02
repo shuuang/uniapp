@@ -83,7 +83,7 @@
 
 	.uni-popup__success {
 		background-color: #e1f3d8;
-    border-color: #c8d6c0;
+    border-color: #cbe0bf;
 	}
 
 	.uni-popup__success-text {

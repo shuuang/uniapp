@@ -146,7 +146,8 @@ export default {
       ],
       current: 0,
       msg: '',
-      type: ''
+      type: '',
+      openid: ''
     }
   },
   methods: {
@@ -200,9 +201,14 @@ export default {
                 // let beforePage = pages[2];
                 // console.log(pages)
                 // beforePage.usersInfo()
+                if (this.openid) {
+                  // console.log('无')
+                  this.addOpenid()
+                }
                 uni.$emit("personal", '5555')
               }
             })
+            // console.log(this.openid)
             // #endif
             // history.back()
           }
@@ -287,6 +293,7 @@ export default {
     },
     wxLogin() {
       // console.log('微信登录')
+      var that = this
       wx.login({
         success (res) {
           // console.log(res)
@@ -301,19 +308,83 @@ export default {
               //   'X-Token': uni.getStorageSync('token')
               // },
               success: (result) => {
-                console.log(result.data);
-                wx.getUserInfo({
-                  success:function (ress) {
-                    console.log(ress)
-                  },
-                  fail:function(){
-                    console.log("启用app.getUserInfo函数，失败！");
-                  },
-                })
+                // console.log(result.data);
+                var res = result.data
+                if (res.code == 20000) {
+                  that.$refs.popupMessage.open()
+                  that.type = 'success'
+                  that.msg = '登录成功'
+                  // console.log(res.data.token)
+                  uni.setStorage({
+                    key: 'token',
+                    data: res.data.token,
+                    success: () => {
+                      uni.$emit('usersnameChange', false)
+                      let pages = getCurrentPages();
+                      // #ifdef H5
+                      if (pages.length > 1) {
+                        uni.navigateBack({
+                          delta: 1,
+                          success: () => {
+                            let beforePage = pages[pages.length - 2];
+                            console.log(pages)
+                            beforePage.usersInfo();//执行前一个页面的onload方法
+                            beforePage.getClubList()
+                          }
+                        })
+                      }
+                      // #endif
+                      // #ifdef MP-WEIXIN
+                      uni.switchTab({
+                        url: '/pages/tabBar/personal/index',
+                        // delta: 1,
+                        success: () => {
+                          // let beforePage = pages[2];
+                          // console.log(pages)
+                          // beforePage.usersInfo()
+                          uni.$emit("personal", '5555')
+                        }
+                      })
+                      // #endif
+                    }
+                  })
+                }
+                if (res.code == 50000){
+                  that.$refs.popupMessage.open()
+                  that.type = 'warn'
+                  that.msg = '没有找到该微信号，登陆后自动绑定用户'
+                  that.openid = res.data
+                  // console.log(res.data)
+                }
               }
             });
           } else {
             console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
+    },
+    addOpenid() {
+      uni.request({
+        url: 'http://localhost:3000/users/updateuser',
+        method: 'post',
+        header: {
+          'X-Token': uni.getStorageSync('token')
+        },
+        data: {
+          openid: this.openid
+        },
+        success: result => {
+          console.log(result)
+          if (result.data.code == 20000) {
+            this.msg = "绑定成功"
+            this.type = "success"
+            this.$refs.popupMessage.open()
+          }
+          if (result.data.code == 50000) {
+            this.msg = "绑定失败"
+            this.type = "error"
+            this.$refs.popupMessage.open()
           }
         }
       })
